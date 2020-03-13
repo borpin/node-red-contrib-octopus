@@ -1,0 +1,25 @@
+{
+    "name"          : "node-red-contrib-octopus",
+    "version"       : "0.0.1",
+    "description"   : "A Node-RED node to fetch data from Octopus",
+    "dependencies"  : {
+    },
+    "license": "",
+    "keywords": [ "node-red", "Octopus" ],
+    "node-red"      : {
+        "nodes"     : {
+            "octopus": "octopus.js"
+        }
+    },
+    "author": {
+        "name": "Brian Orpin",
+        "email": "brian.orpin@gmail.com",
+        "url": "http://nodered.org"
+    },
+    "maintainers": [
+        {
+            "name": "borpin",
+            "email": "brian.orpin@gmail.com"
+        }
+    ]
+}

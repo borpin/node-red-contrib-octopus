@@ -1,0 +1,65 @@
+<script type="text/x-red" data-template-name="octopus in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="octopus">
+    </div>
+    <div class="form-row">
+        <label for="node-input-region"><i class="fa fa-tag"></i> Energy Region</label>
+        <select id="node-input-region" style="width:180px;">
+            <option value="A">_A - East England</option>
+            <option value="B">_B - East Midlands</option>
+            <option value="C">_C - London</option>
+            <option value="D">_D - North Wales, Merseyside and Cheshire</option>
+            <option value="E">_E - West Midlands</option>
+            <option value="F">_F - North East England</option>
+            <option value="G">_G - North West England</option>
+            <option value="H">_H - Southern England</option>
+            <option value="J">_J - South East England</option>
+            <option value="K">_K - South Wales</option>
+            <option value="L">_L - South West England</option>
+            <option value="M">_M - Yorkshire</option>
+            <option value="N">_N - South Scotland</option>
+            <option value="P">_P - North Scotland</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-server"><i class="fa fa-globe"></i> Base URL</label>
+        <input type="text" id="node-config-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apikey"><i class="fa fa-tasks"></i> API key</label>
+        <input type="text" id="node-config-input-apikey">
+    </div>
+    <div class="form-tips">The <b>Base URL</b> is the URL to the octopus.</div>
+</script>
+
+<script type="text/x-red" data-help-name="octopus in">
+    <p>Fetches data from octopus.</p>
+    <p>The <code>msg.payload</code> contains last octopus feed value
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('octopus in',{
+        category: 'input',
+        color:"rgb(91, 192, 222)",
+        defaults: {
+            name: {value:"Octopus"},
+            region: {value:"A"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "octopus.png",
+        align: "right",
+        label: function() {
+            return this.name||this.baseurl;
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        oneditprepare: function() {
+            if (this.datatype === undefined) {
+                $("#node-input-region").val("");
+            }
+        }
+    });
+</script>
