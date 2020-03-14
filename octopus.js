@@ -48,6 +48,7 @@ module.exports = function(RED) {
             // }
             http.get(this.url, function(res) {
                 msg.rc = res.statusCode;
+                msg.version = 1
                 msg.payload = "";
                 res.setEncoding('utf8');
                 res.on('data', function(chunk) {
@@ -57,7 +58,7 @@ module.exports = function(RED) {
                     if (msg.rc === 200) {
                         try {
                             msg.payload = JSON.parse(msg.payload);
-                            msg.min_array = msg.payload.map(a => a.value_inc_vat);
+                            msg.min_array = msg.payload.results.map(a => a.value_inc_vat);
                         }
                         catch(err) {
                             // Failed to parse, pass it on
