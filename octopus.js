@@ -37,6 +37,7 @@ module.exports = function(RED) {
             
             msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
             msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
+            msg.region = this.region;
 
             this.url = this.baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
             // this.url += '&apikey='+this.apikey;
