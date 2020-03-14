@@ -35,6 +35,7 @@ module.exports = function(RED) {
             var endt = new Date(Date.now() + 24*60*60*1000);
             var end_time = endt.toISOString();
             
+            // add start and end used to msg - strip milliseconds
             msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
             msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
             msg.region = this.region;
@@ -56,6 +57,7 @@ module.exports = function(RED) {
                     if (msg.rc === 200) {
                         try {
                             msg.payload = JSON.parse(msg.payload);
+                            msg.min_array = msg.payload.map(a => a.value_inc_vat);
                         }
                         catch(err) {
                             // Failed to parse, pass it on
