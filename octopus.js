@@ -37,7 +37,6 @@ module.exports = function(RED) {
             var next_half_hour = new Date(next_half_hour_ts);
 
             if ( next_run <= now ) {
-                next_run = next_half_hour;
                 var start_time = now.toISOString();
                 var endt = new Date(now.getTime() + 24*60*60*1000);
                 var end_time = endt.toISOString();
@@ -69,6 +68,8 @@ module.exports = function(RED) {
                             catch(err) {
                                 // Failed to parse, pass it on
                             }
+                            // set time for next request on success
+                            next_run = next_half_hour;
                             node.send(msg);
                         }
                     });
