@@ -28,49 +28,55 @@ module.exports = function(RED) {
         // if (this.baseurl.substring(0,5) === "https") { http = require("https"); }
         // else { http = require("http"); }
         http = require("https");
+        var next_run = new Date(0);
+        var next_block = new Date();
 
         this.on("input", function(msg) {
             var now = new Date(); 
-            var start_time = now.toISOString();
-            var endt = new Date(Date.now() + 24*60*60*1000);
-            var end_time = endt.toISOString();
-            
-            // add start and end used to msg - strip milliseconds
-            msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
-            msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
-            msg.region = this.region;
+            var next_half_hour_ts = Math.trunc(Math.floor(((now.getTime()/1000)+(30*60))/1800))*1800*1000;
+            var next_half_hour = new Date(next_half_hour_ts);
 
-            this.url = this.baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
-            // this.url += '&apikey='+this.apikey;
-            // var feedid = this.feedid || msg.feedid;
-            // if (feedid !== "") {
-            //     this.url += '&id=' + feedid;
-            // }
-            http.get(this.url, function(res) {
-                msg.rc = res.statusCode;
-                msg.version = 1
-                msg.payload = "";
-                res.setEncoding('utf8');
-                res.on('data', function(chunk) {
-                    msg.payload += chunk;
-                });
-                res.on('end', function() {
-                    if (msg.rc === 200) {
-                        try {
-                            msg.payload = JSON.parse(msg.payload);
-                            msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
-                            msg.current_price = msg.payload.results[-1].value_inc_vat;
-                            msg.next_price = msg.payload.results[-2].value_inc_vat;
+            if ( next_run <= now ) {
+                next_run = next_half_hour;
+                var start_time = now.toISOString();
+                var endt = new Date(now.getTime() + 24*60*60*1000);
+                var end_time = endt.toISOString();
+                
+                
+                // add start and end used to msg - strip milliseconds
+                msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
+                msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
+                msg.region = this.region;
+    
+                this.url = this.baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+    
+                http.get(this.url, function(res) {
+                    msg.rc = res.statusCode;
+                    msg.version = 1
+                    msg.payload = "";
+                    res.setEncoding('utf8');
+                    res.on('data', function(chunk) {
+                        msg.payload += chunk;
+                    });
+                    res.on('end', function() {
+                        if (msg.rc === 200) {
+                            try {
+                                msg.payload = JSON.parse(msg.payload);
+                                msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
+                                msg.current_price = msg.payload.results[-1].value_inc_vat;
+                                msg.next_price = msg.payload.results[-2].value_inc_vat;
+                            }
+                            catch(err) {
+                                // Failed to parse, pass it on
+                            }
+                            node.send(msg);
                         }
-                        catch(err) {
-                            // Failed to parse, pass it on
-                        }
-                        node.send(msg);
-                    }
+                    });
+                }).on('error', function(e) {
+                    node.error(e,msg);
                 });
-            }).on('error', function(e) {
-                node.error(e,msg);
-            });
+            }
+
         });
     }
     RED.nodes.registerType("octopus in",octopusin);
