@@ -58,6 +58,7 @@ module.exports = function(RED) {
         // }).on('error', function(e) {
         //     node.error(e,msg);
         // });
+        return;
     }
 
     function octopusin(n) {
@@ -90,7 +91,7 @@ module.exports = function(RED) {
             msg.version = 3;
 
             node.warn(["1: ", msg]);
-            getOctopusData();
+            this.getOctopusData();
             node.warn(["3: ", msg]);
 
             node.send(msg);
