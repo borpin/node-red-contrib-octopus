@@ -60,18 +60,18 @@ module.exports = function(RED) {
                                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
 
-                                var blocks = 3;
-                                let result = [];
-                                for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
-                                    let sum = 0;
-                                    for (let i = n; i < n + blocks; i++) {
-                                        sum+= msg.price_array[i];
-                                    }
-                                    result.push(sum / blocks);
-                                }
+                                // var blocks = 3;
+                                // let result = [];
+                                // for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
+                                //     let sum = 0;
+                                //     for (let i = n; i < n + blocks; i++) {
+                                //         sum+= msg.price_array[i];
+                                //     }
+                                //     result.push(sum / blocks);
+                                // }
 
-                                // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
+                                // // console.log(array.indexOf(Math.min(...msg.price_array)));
+                                // msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
 
                                 next_run = next_half_hour;
                             }
