@@ -59,9 +59,12 @@ module.exports = function(RED) {
                         if (msg.rc === 200) {
                             try {
                                 msg.payload = JSON.parse(msg.payload);
-                                msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
                                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+
+                                msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
+                                msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
+                                msg.max_price_inc_vat = console.log(Math.max(...msg.price_array));
 
                                 var blocks = 3;
                                 var result = [];
@@ -74,7 +77,8 @@ module.exports = function(RED) {
                                 }
 
                                 // // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                // msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
+                                // var minblock = { "min Block Price":payload.results[13].value_inc_vat, "min Block valid From":payload.results[13].valid_from, "min_block_size": 13 };
+
 
                                 next_run = next_half_hour;
                                 node.warn("4:");
