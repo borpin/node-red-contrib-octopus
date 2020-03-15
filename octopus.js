@@ -77,6 +77,7 @@ module.exports = function(RED) {
                                 // msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
 
                                 next_run = next_half_hour;
+                                node.warn("4:");
                             }
                             catch(err) {
                                 // Failed to parse, pass it on
