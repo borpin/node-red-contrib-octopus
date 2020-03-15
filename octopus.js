@@ -89,9 +89,9 @@ module.exports = function(RED) {
             msg.region = this.region;
             msg.version = 3;
 
-        node.warn(["1: ", msg]);
-        GetOctopusData(msg);
-        node.warn(["3: ", msg]);
+            node.warn(["1: ", msg]);
+            GetOctopusData(msg);
+            node.warn(["3: ", msg]);
 
             node.send(msg);
     
