@@ -18,19 +18,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
         // this.emonServer = n.emonServer;
         // var sc = RED.nodes.getNode(this.emonServer);
-        var sc = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
-
-        this.baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
-        // this.apikey = sc.credentials.apikey;
 
         this.region = n.region
         var node = this;
-        var http;
-        // if (this.baseurl.substring(0,5) === "https") { http = require("https"); }
-        // else { http = require("http"); }
-        http = require("https");
+
+        var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+        var https = require("https");
         var next_run = new Date(0);
-        var next_block = new Date();
 
         this.on("input", function(msg) {
             var now = new Date(); 
@@ -48,9 +42,9 @@ module.exports = function(RED) {
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
                 msg.region = this.region;
     
-                this.url = this.baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+                let APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
     
-                http.get(this.url, function(res) {
+                https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
                     msg.version = 2
                     msg.payload = "";
@@ -65,6 +59,20 @@ module.exports = function(RED) {
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
                                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+
+                                var blocks = 3;
+                                let result = [];
+                                for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
+                                    let sum = 0;
+                                    for (let i = n; i < n + blocks; i++) {
+                                        sum+= msg.price_array[i];
+                                    }
+                                    result.push(sum / blocks);
+                                }
+
+                                // console.log(array.indexOf(Math.min(...msg.price_array)));
+                                msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
+
                                 next_run = next_half_hour;
                             }
                             catch(err) {
@@ -81,5 +89,52 @@ module.exports = function(RED) {
 
         });
     }
+    
+
+
+    function DarkSkyInputNode(n) {
+        RED.nodes.createNode(this, n);
+        this.lang = n.lang || "en";
+        this.units = n.units || "us";
+        var node = this;
+        this.repeat = 900000;
+        this.interval_id = null;
+        var previousdata = null;
+
+        this.interval_id = setInterval( function() {
+            node.emit("input",{});
+        }, this.repeat );
+
+        this.on('input', function(msg) {
+            assignmentFunction(node, n.date, n.time, n.lat, n.lon, RED.nodes.getNode(n.darksky), function(err) {
+                if (err) {
+                    node.error(err,msg);
+                } else {
+                    weatherPoll(node, msg, function(err) {
+                        if (err) {
+                            node.error(err,msg);
+                        } else {
+                            var msgString = JSON.stringify(msg.payload);
+                            if (msgString !== previousdata) {
+                                previousdata = msgString;
+                                node.send(msg);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        this.on("close", function() {
+            if (this.interval_id !== null) {
+                clearInterval(this.interval_id);
+            }
+        });
+
+        node.emit("input",{});
+    }
+
+
+
     RED.nodes.registerType("octopus in",octopusin);
 }
