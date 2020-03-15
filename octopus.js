@@ -47,7 +47,6 @@ module.exports = function(RED) {
                         // Failed to parse, pass it on
                     }
                     // set time for next request on success
-                    node.send(msg);
                 }
             });
         }).on('error', function(e) {
@@ -72,20 +71,22 @@ module.exports = function(RED) {
             var next_half_hour = new Date(next_half_hour_ts);
 
 
-            if ( next_run <= now ) {
-                var start_time = now.toISOString();
-                var endt = new Date(now.getTime() + 24*60*60*1000);
-                var end_time = endt.toISOString();
-                
-                
-                // add start and end used to msg - strip milliseconds
-                msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
-                msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
-                msg.region = this.region;
+            // if ( next_run <= now ) {
+            var start_time = now.toISOString();
+            var endt = new Date(now.getTime() + 24*60*60*1000);
+            var end_time = endt.toISOString();
+            
+            
+            // add start and end used to msg - strip milliseconds
+            msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
+            msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
+            msg.region = this.region;
+            node.warn("1: " + msg)
+            GetOctopusData(msg)
 
-                GetOctopusData(msg)
+            node.send(msg);
     
-            }
+            // }
 
         });
     }
