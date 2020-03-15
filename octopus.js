@@ -19,7 +19,7 @@ module.exports = function(RED) {
     // function GetOctopusData(region, period_from, period_to, msg) {
     function GetOctopusData(msg) {
 
-        node.warn(["1: ", msg]);
+        node.warn("2: ");
 
         // var sc = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
 
@@ -89,7 +89,9 @@ module.exports = function(RED) {
             msg.region = this.region;
             msg.version = 3;
 
-            GetOctopusData(msg);
+        node.warn(["1: ", msg]);
+        GetOctopusData(msg);
+        node.warn(["3: ", msg]);
 
             node.send(msg);
     
