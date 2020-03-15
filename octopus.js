@@ -63,8 +63,8 @@ module.exports = function(RED) {
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
 
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
-                                msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
-                                msg.max_price_inc_vat = console.log(Math.max(...msg.price_array));
+                                msg.min_price_inc_vat = Math.min(...msg.price_array);
+                                msg.max_price_inc_vat = Math.max(...msg.price_array);
 
                                 var blocks = 3;
                                 var result = [];
