@@ -38,6 +38,7 @@ module.exports = function(RED) {
                 if (msg.rc === 200) {
                     try {
                         msg.payload = JSON.parse(msg.payload);
+                        node.warn(["1: ", msg])
                         msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
                         msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                         msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
@@ -82,7 +83,6 @@ module.exports = function(RED) {
             msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
             msg.region = this.region;
 
-            node.warn(["1: ", msg])
             GetOctopusData(msg)
 
             node.send(msg);
