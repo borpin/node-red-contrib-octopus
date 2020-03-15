@@ -51,7 +51,7 @@ module.exports = function(RED) {
     
                 http.get(this.url, function(res) {
                     msg.rc = res.statusCode;
-                    msg.version = 1
+                    msg.version = 2
                     msg.payload = "";
                     res.setEncoding('utf8');
                     res.on('data', function(chunk) {
