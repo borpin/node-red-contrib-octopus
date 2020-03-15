@@ -25,7 +25,9 @@ module.exports = function(RED) {
         var https = require("https");
         
         this.url = sc + msg.region + '/standard-unit-rates/?' + 'period_from=' + msg.start_time + '&' + 'period_to=' + msg.end_time;
-    
+
+        node.warn(["1: ", msg])
+
         https.get(this.url, function(res) {
             msg.rc = res.statusCode;
             msg.version = 2
