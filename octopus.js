@@ -84,6 +84,7 @@ module.exports = function(RED) {
                                 node.warn("4:");
                             }
                             catch(err) {
+                                node.error(err,msg);
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
