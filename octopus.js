@@ -18,43 +18,46 @@ module.exports = function(RED) {
 
     // function GetOctopusData(region, period_from, period_to, msg) {
     function GetOctopusData(msg) {
-        var sc = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
 
-        // this.baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
-        // this.apikey = sc.credentials.apikey;
-        var https = require("https");
+        node.warn(["1: ", msg]);
+
+        // var sc = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+
+        // // this.baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+        // // this.apikey = sc.credentials.apikey;
+        // var https = require("https");
         
-        var APIurl = sc + msg.region + '/standard-unit-rates/?' + 'period_from=' + msg.start_time + '&' + 'period_to=' + msg.end_time;
+        // var APIurl = sc + msg.region + '/standard-unit-rates/?' + 'period_from=' + msg.start_time + '&' + 'period_to=' + msg.end_time;
 
-        node.warn(["1: ", APIurl]);
+        // node.warn(["1: ", APIurl]);
 
-        https.get(APIurl, function(res) {
-            msg.rc = res.statusCode;
-            msg.version = 2;
-            msg.payload = "";
-            res.setEncoding('utf8');
-            res.on('data', function(chunk) {
-                msg.payload += chunk;
-            });
-            res.on('end', function() {
-                if (msg.rc === 200) {
-                    try {
-                        msg.payload = JSON.parse(msg.payload);
-                        node.warn(["1: ", msg]);
-                        msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
-                        msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
-                        msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
-                        next_run = next_half_hour;
-                    }
-                    catch(err) {
-                        // Failed to parse, pass it on
-                    }
-                    // set time for next request on success
-                }
-            });
-        }).on('error', function(e) {
-            node.error(e,msg);
-        });
+        // https.get(APIurl, function(res) {
+        //     msg.rc = res.statusCode;
+        //     msg.version = 2;
+        //     msg.payload = "";
+        //     res.setEncoding('utf8');
+        //     res.on('data', function(chunk) {
+        //         msg.payload += chunk;
+        //     });
+        //     res.on('end', function() {
+        //         if (msg.rc === 200) {
+        //             try {
+        //                 msg.payload = JSON.parse(msg.payload);
+        //                 node.warn(["1: ", msg]);
+        //                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
+        //                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
+        //                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+        //                 next_run = next_half_hour;
+        //             }
+        //             catch(err) {
+        //                 // Failed to parse, pass it on
+        //             }
+        //             // set time for next request on success
+        //         }
+        //     });
+        // }).on('error', function(e) {
+        //     node.error(e,msg);
+        // });
     }
 
     function octopusin(n) {
