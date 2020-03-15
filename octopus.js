@@ -62,15 +62,14 @@ module.exports = function(RED) {
                             try {
                                 msg.payload = JSON.parse(msg.payload);
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
-                                msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_exc_vat;
-                                msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_exc_vat;
+                                msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
+                                msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+                                next_run = next_half_hour;
                             }
                             catch(err) {
-                                node.error(e,msg);
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            next_run = next_half_hour;
                             node.send(msg);
                         }
                     });
