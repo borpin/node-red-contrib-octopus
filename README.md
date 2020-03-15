@@ -8,7 +8,6 @@ My [referral code](share.octopus.energy/mauve-bell-979) if you are switching.
 Install
 -------
 
-Run the following command in your Node-RED user directory - typically `~/.node-red`
 
 
 Usage
