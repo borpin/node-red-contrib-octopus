@@ -24,13 +24,13 @@ module.exports = function(RED) {
         // this.apikey = sc.credentials.apikey;
         var https = require("https");
         
-        this.url = sc + msg.region + '/standard-unit-rates/?' + 'period_from=' + msg.start_time + '&' + 'period_to=' + msg.end_time;
+        var APIurl = sc + msg.region + '/standard-unit-rates/?' + 'period_from=' + msg.start_time + '&' + 'period_to=' + msg.end_time;
 
-        node.warn(["1: ", msg])
+        node.warn(["1: ", APIurl]);
 
-        https.get(this.url, function(res) {
+        https.get(APIurl, function(res) {
             msg.rc = res.statusCode;
-            msg.version = 2
+            msg.version = 2;
             msg.payload = "";
             res.setEncoding('utf8');
             res.on('data', function(chunk) {
@@ -40,7 +40,7 @@ module.exports = function(RED) {
                 if (msg.rc === 200) {
                     try {
                         msg.payload = JSON.parse(msg.payload);
-                        node.warn(["1: ", msg])
+                        node.warn(["1: ", msg]);
                         msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
                         msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                         msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
@@ -84,8 +84,9 @@ module.exports = function(RED) {
             msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
             msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
             msg.region = this.region;
+            msg.version = 3;
 
-            GetOctopusData(msg)
+            GetOctopusData(msg);
 
             node.send(msg);
     
