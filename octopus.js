@@ -30,11 +30,13 @@ module.exports = function(RED) {
             var now = new Date(); 
             var next_half_hour_ts = Math.trunc(Math.floor(((now.getTime()/1000)+(30*60))/1800))*1800*1000;
             var next_half_hour = new Date(next_half_hour_ts);
+            console.log("1:");
 
             if ( next_run <= now ) {
                 var start_time = now.toISOString();
                 var endt = new Date(now.getTime() + 24*60*60*1000);
                 var end_time = endt.toISOString();
+                console.log("1:");
                 
                 
                 // add start and end used to msg - strip milliseconds
@@ -42,7 +44,8 @@ module.exports = function(RED) {
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
                 msg.region = this.region;
     
-                let APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+                var APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+                console.log("1:");
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
