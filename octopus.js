@@ -30,13 +30,13 @@ module.exports = function(RED) {
             var now = new Date(); 
             var next_half_hour_ts = Math.trunc(Math.floor(((now.getTime()/1000)+(30*60))/1800))*1800*1000;
             var next_half_hour = new Date(next_half_hour_ts);
-            console.log("1:");
+            node.warn("1:");
 
             if ( next_run <= now ) {
                 var start_time = now.toISOString();
                 var endt = new Date(now.getTime() + 24*60*60*1000);
                 var end_time = endt.toISOString();
-                console.log("1:");
+                node.warn("2:");
                 
                 
                 // add start and end used to msg - strip milliseconds
@@ -45,7 +45,7 @@ module.exports = function(RED) {
                 msg.region = this.region;
     
                 var APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
-                console.log("1:");
+                node.warn("3:");
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
@@ -63,15 +63,15 @@ module.exports = function(RED) {
                                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
 
-                                // var blocks = 3;
-                                // let result = [];
-                                // for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
-                                //     let sum = 0;
-                                //     for (let i = n; i < n + blocks; i++) {
-                                //         sum+= msg.price_array[i];
-                                //     }
-                                //     result.push(sum / blocks);
-                                // }
+                                var blocks = 3;
+                                var result = [];
+                                for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
+                                    let sum = 0;
+                                    for (let i = n; i < n + blocks; i++) {
+                                        sum+= msg.price_array[i];
+                                    }
+                                    result.push(sum / blocks);
+                                }
 
                                 // // console.log(array.indexOf(Math.min(...msg.price_array)));
                                 // msg.min_price_inc_vat = console.log(Math.min(...msg.price_array));
