@@ -17,7 +17,7 @@ module.exports = function(RED) {
     });
 
     // function GetOctopusData(region, period_from, period_to, msg) {
-    function GetOctopusData() {
+    function getOctopusData() {
 
         node.warn("2: ");
 
@@ -90,7 +90,7 @@ module.exports = function(RED) {
             msg.version = 3;
 
             node.warn(["1: ", msg]);
-            GetOctopusData();
+            getOctopusData();
             node.warn(["3: ", msg]);
 
             node.send(msg);
