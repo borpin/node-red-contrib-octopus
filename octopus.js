@@ -81,7 +81,8 @@ module.exports = function(RED) {
             msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
             msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
             msg.region = this.region;
-            node.warn("1: " + JSON.stringify(msg))
+
+            node.warn(["1: ", msg])
             GetOctopusData(msg)
 
             node.send(msg);
