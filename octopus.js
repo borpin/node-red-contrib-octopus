@@ -43,6 +43,7 @@ module.exports = function(RED) {
                 var end_time = endt.toISOString();
                 let msg2 = {};
                 msg2.topic = "octopus";
+                msg2.payload = {};
                 
                 // add start and end used to msg - strip milliseconds
                 msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
