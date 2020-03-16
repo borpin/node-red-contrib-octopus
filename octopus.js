@@ -59,17 +59,20 @@ module.exports = function(RED) {
                         if (msg.rc === 200) {
                             try {
                                 msg.payload = JSON.parse(msg.payload);
+                                // current price is last item
                                 msg.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
 
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
+                                // map seems to return results in reverse.
                                 msg.price_array.reverse();
-                                
+
                                 msg.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg.max_price_inc_vat = Math.max(...msg.price_array);
 
                                 var num_blocks = 3;
                                 var blocks_result = [];
+                                // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
                                 for (let n = 0; n < price_array_rev.length - num_blocks + 1; n++) {
                                     let sum = 0;
@@ -78,11 +81,10 @@ module.exports = function(RED) {
                                     }
                                     blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
                                 }
+                                // put results in same order as original data
                                 blocks_result.reverse();
-
-                                // // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                let min_block_pos = blocks_result.indexOf(Math.min(...blocks_result))+1;
-                                msg.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size_mins": num_blocks * 30 };
+                                let min_block_start = blocks_result.indexOf(Math.min(...blocks_result))+num_blocks;
+                                msg.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
 
                                 next_run = next_half_hour;
                                 node.warn("4:");
