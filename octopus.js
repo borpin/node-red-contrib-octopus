@@ -66,19 +66,19 @@ module.exports = function(RED) {
                                 msg.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                var blocks = 3;
-                                var result = [];
-                                for (let n = 0; n < msg.price_array.length - blocks + 1; n++) {
+                                var num_blocks = 3;
+                                var blocks_result = [];
+                                for (let n = 0; n < msg.price_array.length - num_blocks + 1; n++) {
                                     let sum = 0;
-                                    for (let i = n; i < n + blocks; i++) {
+                                    for (let i = n; i < n + num_blocks; i++) {
                                         sum+= msg.price_array[i];
                                     }
-                                    result.push(sum / blocks);
+                                    blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
                                 }
 
                                 // // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                let min_block_pos = msg.price_array.indexOf(Math.min(...msg.price_array));
-                                msg.min_block = { "min Block Price":msg.payload.results[min_block_pos].value_inc_vat, "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size": min_block_pos };
+                                let min_block_pos = blocks_result.indexOf(Math.min(...blocks_result));
+                                msg.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size_mins": num_blocks * 30 };
 
                                 next_run = next_half_hour;
                                 node.warn("4:");
