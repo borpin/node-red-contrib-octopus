@@ -80,13 +80,13 @@ module.exports = function(RED) {
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
                                 num_blocks.forEach(block => {
-                                    var blocks_result = [];
+                                    let blocks_result = [];
                                     for (let n = 0; n < price_array_rev.length - block + 1; n++) {
                                         let sum = 0;
                                         for (let i = n; i < n + block; i++) {
                                             sum+= price_array_rev[i];
                                         }
-                                        blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
+                                        blocks_result.push(Math.round(Math.trunc((sum / block)*1000)/10)/100);
                                     }
                                     // blocks are now listed in same order as main data (push each item of an array reverses it)
                                     // msg.blocks = blocks_result;
