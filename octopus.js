@@ -64,7 +64,7 @@ module.exports = function(RED) {
                                 msg.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
 
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
-                                // map seems to return results in reverse.
+                                // map seems to return results in reverse (probably includes a push).
                                 msg.price_array.reverse();
 
                                 msg.min_price_inc_vat = Math.min(...msg.price_array);
@@ -82,7 +82,7 @@ module.exports = function(RED) {
                                     blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
                                 }
                                 // put results in same order as original data
-                                blocks_result.reverse();
+                                // blocks_result.reverse();
                                 msg.blocks = blocks_result;
                                 let min_block_start = blocks_result.indexOf(Math.min(...blocks_result))+num_blocks;
                                 node.warn(min_block_start);
