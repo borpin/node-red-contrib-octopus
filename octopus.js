@@ -18,14 +18,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var node = this;
-        // var num_blocks = [4,2];
+
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
             return parseInt(item.trim());
           });
         }
-        node.warn(num_blocks);
     
         this.region = n.region
 
