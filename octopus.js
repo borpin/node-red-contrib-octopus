@@ -17,12 +17,15 @@ module.exports = function(RED) {
     function octopusin(n) {
         RED.nodes.createNode(this,n);
 
+        node.warn(n.numblocks);
+
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
             return item.trim();
           });
         }
+        node.warn(num_blocks);
     
         this.region = n.region
         var node = this;
