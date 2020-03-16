@@ -18,7 +18,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
         // this.emonServer = n.emonServer;
         // var sc = RED.nodes.getNode(this.emonServer);
-
+        // var blocks = [];
+        // if (n.blocks !== undefined) {
+        //   blocks = n.blocks.split(",").map(function(item) {
+        //     return item.trim();
+        //   });
+        // }
+    
         this.region = n.region
         var node = this;
 
@@ -46,7 +52,7 @@ module.exports = function(RED) {
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
-                    msg.version = 2
+                    msg.version = 3
                     msg.payload = "";
                     res.setEncoding('utf8');
                     res.on('data', function(chunk) {
@@ -69,21 +75,26 @@ module.exports = function(RED) {
                                 msg2.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                var num_blocks = 4;
-                                var blocks_result = [];
+                                var num_blocks = [4,2];
+                                let blocks_output = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
-                                for (let n = 0; n < price_array_rev.length - num_blocks + 1; n++) {
-                                    let sum = 0;
-                                    for (let i = n; i < n + num_blocks; i++) {
-                                        sum+= price_array_rev[i];
+                                num_blocks.forEach(block => {
+                                    for (let n = 0; n < price_array_rev.length - block + 1; n++) {
+                                        let sum = 0;
+                                        for (let i = n; i < n + block; i++) {
+                                            sum+= price_array_rev[i];
+                                        }
+                                        blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
                                     }
-                                    blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
-                                }
-                                // blocks are now listed in same order as main data (push each item of an array reverses it)
-                                // msg.blocks = blocks_result;
-                                let min_block_start = blocks_result.indexOf(Math.min(...blocks_result))+num_blocks;
-                                msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
+                                    // blocks are now listed in same order as main data (push each item of an array reverses it)
+                                    // msg.blocks = blocks_result;
+                                    let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block;
+                                    blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
+                                    // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
+                                        
+                                });
+                                msg2.min_blocks = blocks_output;
 
                                 next_run = next_half_hour;
                             }
