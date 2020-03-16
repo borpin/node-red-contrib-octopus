@@ -18,13 +18,14 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var node = this;
-        // var num_blocks = [];
-        // if (n.numblocks !== undefined) {
-        //   num_blocks = n.numblocks.split(",").map(function(item) {
-        //     return parseInt(item.trim());
-        //   });
-        // }
-        // node.warn(num_blocks);
+        // var num_blocks = [4,2];
+        var num_blocks = [];
+        if (n.numblocks !== undefined) {
+          num_blocks = n.numblocks.split(",").map(function(item) {
+            return parseInt(item.trim());
+          });
+        }
+        node.warn(num_blocks);
     
         this.region = n.region
 
@@ -75,7 +76,6 @@ module.exports = function(RED) {
                                 msg2.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                var num_blocks = [4,2];
                                 let blocks_output = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
