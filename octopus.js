@@ -83,11 +83,12 @@ module.exports = function(RED) {
                                 }
                                 // put results in same order as original data
                                 blocks_result.reverse();
+                                msg.blocks = blocks_result;
                                 let min_block_start = blocks_result.indexOf(Math.min(...blocks_result))+num_blocks;
+                                node.warn(min_block_start);
                                 msg.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
 
                                 next_run = next_half_hour;
-                                node.warn("4:");
                             }
                             catch(err) {
                                 node.error(err,msg);
