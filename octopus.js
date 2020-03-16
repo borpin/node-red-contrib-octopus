@@ -22,7 +22,7 @@ module.exports = function(RED) {
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
-            return item.trim();
+            return parseInt(item.trim());
           });
         }
         node.warn(num_blocks);
