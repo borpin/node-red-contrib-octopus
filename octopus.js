@@ -77,8 +77,8 @@ module.exports = function(RED) {
                                 }
 
                                 // // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                let min_block_pos = price_array.indexOf(Math.min(...msg.price_array));
-                                // msg.min_block = { "min Block Price":msg.payload.results[min_block_pos].value_inc_vat, "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size": min_block_pos };
+                                let min_block_pos = msg.price_array.indexOf(Math.min(...msg.price_array));
+                                msg.min_block = { "min Block Price":msg.payload.results[min_block_pos].value_inc_vat, "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size": min_block_pos };
 
                                 next_run = next_half_hour;
                                 node.warn("4:");
