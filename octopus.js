@@ -42,6 +42,8 @@ module.exports = function(RED) {
                 var endt = new Date(now.getTime() + 24*60*60*1000);
                 var end_time = endt.toISOString();
                 let msg2 = {};
+                msg2.topic = "octopus";
+                msg2.payload = {};
                 
                 // add start and end used to msg - strip milliseconds
                 msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
@@ -62,8 +64,8 @@ module.exports = function(RED) {
                             try {
                                 msg.payload = JSON.parse(msg.payload);
                                 // current price is last item
-                                msg2.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
-                                msg2.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+                                msg2.payload.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
+                                msg2.payload.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
                                 
                                 // Extract the inc VAt prices into an Array
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
@@ -71,8 +73,8 @@ module.exports = function(RED) {
                                 msg.price_array.reverse();
                                 
                                 // Extract min and max prices from available data
-                                msg2.min_price_inc_vat = Math.min(...msg.price_array);
-                                msg2.max_price_inc_vat = Math.max(...msg.price_array);
+                                msg2.payload.min_price_inc_vat = Math.min(...msg.price_array);
+                                msg2.payload.max_price_inc_vat = Math.max(...msg.price_array);
 
                                 let blocks_output = [];
                                 // put prices array now -> future
@@ -93,10 +95,10 @@ module.exports = function(RED) {
                                         msg.min_block_start = min_block_start;
 
                                         blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
-                                        // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
+                                        // msg2.payload.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
                                 });
-                                msg2.min_blocks = blocks_output;
+                                msg2.payload.min_blocks = blocks_output;
 
                                 next_run = next_half_hour;
                             }
