@@ -51,50 +51,44 @@
                     <dd>The raw data from the API call</dd>
                 </dl>
             </li>
-            <li>Standard error
+            <dd>Processed Data
                 <dl class="message-properties">
                     <dt>payload <span class="property-type">string</span></dt>
                     <dd>the standard error of the command.</dd>
+                    <dt><span class="property-type"></span></dt>
+                    <dd>Current period price</dd>
+                    <dt><span class="property-type"></span></dt>
+                    <dd>Next period price</dd>
+                    <dt><span class="property-type"></span></dt>
+                    <dd>Minimum Price within available data</dd>
+                    <dt><span class="property-type"></span></dt>
+                    <dd>Maximum Price within available data</dd>
+                    <dt><span class="property-type"></span></dt>
+                    <dd>An array of minimum price blocks</dd>
+                    <ul>
+                        <dt><span class="property-type"></span></dt>
+                        <dd>Block Price (average over periods)</dd>
+                        <dt><span class="property-type"></span></dt>
+                        <dd>Valid from (when block period starts)</dd>
+                        <dt><span class="property-type"></span></dt>
+                        <dd>Length of block in minutes</dd>
+                    </ul>
                 </dl>
             </li>
         </ol>
 
     <h3>Details</h3>
-        <p><code>msg.payload</code> is used as the payload of the published message.
-        If it contains an Object it will be converted to a JSON string before being sent.
-        If it contains a binary Buffer the message will be published as-is.</p>
-        <p>The topic used can be configured in the node or, if left blank, can be set
-        by <code>msg.topic</code>.</p>
-        <p>Likewise the QoS and retain values can be configured in the node or, if left
-        blank, set by <code>msg.qos</code> and <code>msg.retain</code> respectively.</p>
+        <p>The Octopus Agile API provides the ability to query how much energy will cost
+            in the future. The data is broken up into 30 min periods. The data for the next 24Hrs (23:00 - 23:00) is released 
+            at approximately 16:00. The number of data periods returned by the API varies between approximately 15 and 63.
+        <p>This node returns the raw data and a set of processed data most likely to be useful to the user.
+        <p>The API is queried once per 30 minute period as close to the boundary as possible. To force the node to
+            request the data, the flow must be re-deployed.
 
     <h3>References</h3>
         <ul>
-            <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
-            <li><a>GitHub</a> - the nodes github repository</li>
+            <li><a>Octopus API docs</a> https://developer.octopus.energy/docs/api</li>
         </ul>
-
-
-    <h1>Description</h1>
-    <p>Fetches data from octopus.</p>
-    <h2>Data returned</h2>
-    <p>There are 2 Outputs for this node</p>
-    <ol>
-        <li>Raw data plus debug elements (liable to change)</li>
-        <li>Data for use (all prices inc VAT)</li>
-        <ul>
-            <li>Current period price</li>
-            <li>Next period price</li>
-            <li>Minimum Price within available data</li>
-            <li>Maximum Price within available data</li>
-            <li>An array of minimum price blocks</li>
-            <ul>
-                <li>Block Price (average over periods)</li>
-                <li>Valid from (when block period starts)</li>
-                <li>Length of block in minutes</li>
-            </ul>
-        </ul>
-    </ol
 </script>
 
 <script type="text/javascript">
