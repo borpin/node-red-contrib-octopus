@@ -80,7 +80,7 @@ module.exports = function(RED) {
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
                                 num_blocks.forEach(block => {
-                                    let blocks_result = [];
+                                    var blocks_result = [];
                                     for (let n = 0; n < price_array_rev.length - block + 1; n++) {
                                         let sum = 0;
                                         for (let i = n; i < n + block; i++) {
