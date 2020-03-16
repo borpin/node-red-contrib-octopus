@@ -16,14 +16,13 @@ module.exports = function(RED) {
 
     function octopusin(n) {
         RED.nodes.createNode(this,n);
-        // this.emonServer = n.emonServer;
-        // var sc = RED.nodes.getNode(this.emonServer);
-        // var blocks = [];
-        // if (n.blocks !== undefined) {
-        //   blocks = n.blocks.split(",").map(function(item) {
-        //     return item.trim();
-        //   });
-        // }
+
+        var num_blocks = [];
+        if (n.blocks !== undefined) {
+          blocks = n.blocks.split(",").map(function(item) {
+            return item.trim();
+          });
+        }
     
         this.region = n.region
         var node = this;
@@ -75,7 +74,7 @@ module.exports = function(RED) {
                                 msg2.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                var num_blocks = [4,2];
+                                // var num_blocks = [4,2];
                                 let blocks_output = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();

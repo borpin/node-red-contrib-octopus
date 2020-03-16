@@ -23,14 +23,14 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-config-input-server"><i class="fa fa-globe"></i> Base URL</label>
-        <input type="text" id="node-config-input-server">
+        <label for="node-config-num-blocks"><i class="fa fa-globe"></i> Period length</label>
+        <input type="text" id="node-config-num-blocks">
     </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-config-input-apikey"><i class="fa fa-tasks"></i> API key</label>
         <input type="text" id="node-config-input-apikey">
-    </div>
-    <div class="form-tips">The <b>Base URL</b> is the URL to the octopus.</div>
+    </div> -->
+    <div class="form-tips">The <b>Period length</b> is the number of 30 minute blocks to average to find cheapest period of that length (e.g. 2,4 for 60 min and 120min periods).</div>
 </script>
 
 <script type="text/x-red" data-help-name="octopus in">
@@ -44,7 +44,8 @@
         color:"rgb(91, 192, 222)",
         defaults: {
             name: {value:"Octopus"},
-            region: {value:"A"}
+            region: {value:"A"},
+            num_blocks: {value: 4}
         },
         inputs:1,
         outputs:2,
