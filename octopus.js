@@ -53,7 +53,6 @@ module.exports = function(RED) {
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
-                    msg.version = 3
                     msg.payload = "";
                     res.setEncoding('utf8');
                     res.on('data', function(chunk) {
