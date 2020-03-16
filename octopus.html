@@ -34,6 +34,47 @@
 </script>
 
 <script type="text/x-red" data-help-name="octopus in">
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>inject
+            <span class="property-type">any</span>
+        </dt>
+        <dd> An injection to trigger node. Recommend this is done once every 30 minutes. Node will not fire if more often.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+        <ol class="node-ports">
+            <li>Raw Data
+                <dl class="message-properties">
+                    <dt>payload <span class="property-type">object</span></dt>
+                    <dd>The raw data from the API call</dd>
+                </dl>
+            </li>
+            <li>Standard error
+                <dl class="message-properties">
+                    <dt>payload <span class="property-type">string</span></dt>
+                    <dd>the standard error of the command.</dd>
+                </dl>
+            </li>
+        </ol>
+
+    <h3>Details</h3>
+        <p><code>msg.payload</code> is used as the payload of the published message.
+        If it contains an Object it will be converted to a JSON string before being sent.
+        If it contains a binary Buffer the message will be published as-is.</p>
+        <p>The topic used can be configured in the node or, if left blank, can be set
+        by <code>msg.topic</code>.</p>
+        <p>Likewise the QoS and retain values can be configured in the node or, if left
+        blank, set by <code>msg.qos</code> and <code>msg.retain</code> respectively.</p>
+
+    <h3>References</h3>
+        <ul>
+            <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
+            <li><a>GitHub</a> - the nodes github repository</li>
+        </ul>
+
+
     <h1>Description</h1>
     <p>Fetches data from octopus.</p>
     <h2>Data returned</h2>

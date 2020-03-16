@@ -18,7 +18,6 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var node = this;
-        node.warn(n.numblocks);
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
