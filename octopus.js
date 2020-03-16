@@ -18,14 +18,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var node = this;
-        // var num_blocks = [4,2];
+
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
             return parseInt(item.trim());
           });
         }
-        node.warn(num_blocks);
     
         this.region = n.region
 
@@ -53,7 +52,6 @@ module.exports = function(RED) {
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
-                    msg.version = 3
                     msg.payload = "";
                     res.setEncoding('utf8');
                     res.on('data', function(chunk) {
@@ -91,7 +89,9 @@ module.exports = function(RED) {
                                         }
                                         // blocks are now listed in same order as main data (push each item of an array reverses it)
                                         // msg.blocks = blocks_result;
-                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block;
+                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
+                                        msg.min_block_start = min_block_start;
+
                                         blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
                                         // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
