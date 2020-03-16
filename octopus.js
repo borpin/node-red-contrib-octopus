@@ -18,8 +18,8 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var num_blocks = [];
-        if (n.blocks !== undefined) {
-          blocks = n.blocks.split(",").map(function(item) {
+        if (n.numblocks !== undefined) {
+          num_blocks = n.numblocks.split(",").map(function(item) {
             return item.trim();
           });
         }
