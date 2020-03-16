@@ -90,9 +90,9 @@ module.exports = function(RED) {
                                         }
                                         // blocks are now listed in same order as main data (push each item of an array reverses it)
                                         // msg.blocks = blocks_result;
-                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block;
+                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
                                         msg.min_block_start = min_block_start;
-                                        
+
                                         blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
                                         // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
