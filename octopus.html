@@ -34,8 +34,26 @@
 </script>
 
 <script type="text/x-red" data-help-name="octopus in">
+    <h1>Description</h1>
     <p>Fetches data from octopus.</p>
-    <p>The <code>msg.payload</code> contains last octopus feed value
+    <h2>Data returned</h2>
+    <p>There are 2 Outputs for this node</p>
+    <ol>
+        <li>Raw data plus debug elements (liable to change)</li>
+        <li>Data for use (all prices inc VAT)</li>
+        <ul>
+            <li>Current period price</li>
+            <li>Next period price</li>
+            <li>Minimum Price within available data</li>
+            <li>Maximum Price within available data</li>
+            <li>An array of minimum price blocks</li>
+            <ul>
+                <li>Block Price (average over periods)</li>
+                <li>Valid from (when block period starts)</li>
+                <li>Length of block in minutes</li>
+            </ul>
+        </ul>
+    </ol
 </script>
 
 <script type="text/javascript">
