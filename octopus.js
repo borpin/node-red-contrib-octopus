@@ -70,7 +70,7 @@ module.exports = function(RED) {
                                 msg.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                var num_blocks = 3;
+                                var num_blocks = 4;
                                 var blocks_result = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
