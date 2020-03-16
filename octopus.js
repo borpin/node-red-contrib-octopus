@@ -68,16 +68,18 @@ module.exports = function(RED) {
 
                                 var num_blocks = 3;
                                 var blocks_result = [];
-                                for (let n = 0; n < msg.price_array.length - num_blocks + 1; n++) {
+                                var price_array_rev = msg.price_array.reverse();
+                                for (let n = 0; n < price_array_rev.length - num_blocks + 1; n++) {
                                     let sum = 0;
                                     for (let i = n; i < n + num_blocks; i++) {
-                                        sum+= msg.price_array[i];
+                                        sum+= price_array_rev[i];
                                     }
                                     blocks_result.push(Math.round(Math.trunc((sum / num_blocks)*1000)/10)/100);
                                 }
+                                blocks_result.reverse();
 
                                 // // console.log(array.indexOf(Math.min(...msg.price_array)));
-                                let min_block_pos = blocks_result.indexOf(Math.min(...blocks_result));
+                                let min_block_pos = blocks_result.indexOf(Math.min(...blocks_result))+1;
                                 msg.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_pos].valid_from, "min_block_size_mins": num_blocks * 30 };
 
                                 next_run = next_half_hour;
