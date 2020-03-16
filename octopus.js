@@ -18,13 +18,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         var node = this;
-        var num_blocks = [];
-        if (n.numblocks !== undefined) {
-          num_blocks = n.numblocks.split(",").map(function(item) {
-            return parseInt(item.trim());
-          });
-        }
-        node.warn(num_blocks);
+        // var num_blocks = [];
+        // if (n.numblocks !== undefined) {
+        //   num_blocks = n.numblocks.split(",").map(function(item) {
+        //     return parseInt(item.trim());
+        //   });
+        // }
+        // node.warn(num_blocks);
     
         this.region = n.region
 
@@ -75,24 +75,26 @@ module.exports = function(RED) {
                                 msg2.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.max_price_inc_vat = Math.max(...msg.price_array);
 
-                                // var num_blocks = [4,2];
+                                var num_blocks = [4,2];
                                 let blocks_output = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
                                 num_blocks.forEach(block => {
-                                    let blocks_result = [];
-                                    for (let n = 0; n < price_array_rev.length - block + 1; n++) {
-                                        let sum = 0;
-                                        for (let i = n; i < n + block; i++) {
-                                            sum+= price_array_rev[i];
+                                    if (price_array_rev.length > block + 1) {
+                                        let blocks_result = [];
+                                        for (let n = 0; n < price_array_rev.length - block + 1; n++) {
+                                            let sum = 0;
+                                            for (let i = n; i < n + block; i++) {
+                                                sum+= price_array_rev[i];
+                                            }
+                                            blocks_result.push(Math.round(Math.trunc((sum / block)*1000)/10)/100);
                                         }
-                                        blocks_result.push(Math.round(Math.trunc((sum / block)*1000)/10)/100);
+                                        // blocks are now listed in same order as main data (push each item of an array reverses it)
+                                        // msg.blocks = blocks_result;
+                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block;
+                                        blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
+                                        // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
-                                    // blocks are now listed in same order as main data (push each item of an array reverses it)
-                                    // msg.blocks = blocks_result;
-                                    let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block;
-                                    blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
-                                    // msg2.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                         
                                 });
                                 msg2.min_blocks = blocks_output;
