@@ -17,8 +17,8 @@ module.exports = function(RED) {
     function octopusin(n) {
         RED.nodes.createNode(this,n);
 
+        var node = this;
         node.warn(n.numblocks);
-
         var num_blocks = [];
         if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
@@ -28,7 +28,6 @@ module.exports = function(RED) {
         node.warn(num_blocks);
     
         this.region = n.region
-        var node = this;
 
         var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
         var https = require("https");
