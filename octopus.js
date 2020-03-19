@@ -64,8 +64,8 @@ module.exports = function(RED) {
                             try {
                                 msg.payload = JSON.parse(msg.payload);
                                 // current price is last item
-                                msg2.payload.current_price = msg.payload.results[msg.payload.results.length - 1].value_inc_vat;
-                                msg2.payload.next_price = msg.payload.results[msg.payload.results.length - 2].value_inc_vat;
+                                msg2.payload.current_price = Number(msg.payload.results[msg.payload.results.length - 1].value_inc_vat);
+                                msg2.payload.next_price = Number(msg.payload.results[msg.payload.results.length - 2].value_inc_vat);
                                 
                                 // Extract the inc VAt prices into an Array
                                 msg.price_array = msg.payload.results.map(a => a.value_inc_vat);
