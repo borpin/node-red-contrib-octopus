@@ -79,7 +79,7 @@
             <li>InfluxDB Formatted Data (influxdb out node)
                 <dl class="message-properties">
                     <dt>payload<span class="property-type">array</span></dt>
-                    <dd>Array of data pairs of value and time</dd>
+                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile'</dd>
                     <dt>measurement<span class="property-type">string</span></dt>
                     <dd>A value for the InfluxDB measurement value (default OctopusPrice). 
                         Can be overwritten in the InfluxDB input node</dd>
@@ -88,16 +88,17 @@
         </ol>
 
     <h3>Details</h3>
-        <p>The Octopus Agile API provides the ability to query how much energy will cost
-            in the future. The data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
-            at approximately 16:00. The number of data periods returned by the API varies between approximately 15 and 63.
-        <p>This node returns the raw data, a set of processed data most likely to be useful to the user and a preformatted output for InfluxDB.
+        <p>Query the Octopus Agile API for future pricing.
+        <p>The pricing data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
+            at approximately 16:00Z. The request is set to obtain all data available from now so the number of data periods 
+            returned by the API varies between approximately 15 and 63.
+        <p>This node has 3 outputs; the raw data, a set of processed data most likely to be useful to the user and a preformatted output for InfluxDB.
         <p>The API is queried once per 30 minute period as close to the boundary as possible. To force the node to
             request the data, the flow must be re-deployed.
 
     <h3>References</h3>
         <ul>
-            <li><a>Octopus API docs</a> https://developer.octopus.energy/docs/api</li>
+            <li><a> href="https://developer.octopus.energy/docs/api">Octopus API docs</a> </li>
         </ul>
 </script>
 
