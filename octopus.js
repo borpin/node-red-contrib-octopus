@@ -108,6 +108,8 @@ module.exports = function(RED) {
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
                                 });
 
+                                msg3.measurement = "OctopusPrice";
+
                                 next_run = next_half_hour;
                             }
                             catch(err) {
