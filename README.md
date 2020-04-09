@@ -30,7 +30,7 @@ If you want the *dev* branch, add `#dev` to the end of the URL.
 Usage
 -----
 
-There are 3 outputs from the node;
+There are 3 data outputs from the node;
 
 1. **raw data** - this is the raw data returned by the API.
 1. **processed data** - this output is a set of processed data.
@@ -40,3 +40,5 @@ There are 3 outputs from the node;
     * **max_price_inc_vat** - the maximum price of electricity in the current data set.
     * **Array of minimum price blocks** - an array of blocks of time that are the cheapest period within the current data set. e.g. at what time does the cheapest 2 Hr block occur.  Any number of lengths can be specified. 2 blocks = 60 mins.
 1. **InfluxDB Data** A set of data ready to be passed to an *influxdb in* node and loaded into InfluxDB. This can be loaded repeatedly as it is a timeseries and the times are the same.
+
+By injecting (anything) into the node on the hour and half hour, the node will update the data set and the current/next prices. The update rate is limited to 30 minutes to protect the Octopus API. To force an update move a node to force a redeploy.
