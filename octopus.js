@@ -115,7 +115,7 @@ module.exports = function(RED) {
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            node.send([msg, msg2]);
+                            node.send([msg, msg2, msg3]);
                         }
                     });
                 }).on('error', function(e) {
