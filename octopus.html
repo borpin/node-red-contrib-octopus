@@ -40,7 +40,8 @@
         <dt>inject
             <span class="property-type">any</span>
         </dt>
-        <dd> An injection to trigger node. Recommend this is done once every 30 minutes. Node will not fire if more often.</dd>
+        <dd>An injection to trigger node. Recommend this is done once every 30 minutes. Node will only fire once during a 
+            data period to protect .</dd>
     </dl>
 
     <h3>Outputs</h3>
@@ -51,43 +52,53 @@
                     <dd>The raw data from the API call</dd>
                 </dl>
             </li>
-            <dd>Processed Data
+            <li>Processed Data
                 <dl class="message-properties">
                     <dt>payload <span class="property-type">string</span></dt>
                     <dd>the standard error of the command.</dd>
-                    <dt><span class="property-type"></span></dt>
+                    <dt>payload.current_price<span class="property-type">float</span></dt>
                     <dd>Current period price</dd>
-                    <dt><span class="property-type"></span></dt>
+                    <dt>payload.next_price<span class="property-type">float</span></dt>
                     <dd>Next period price</dd>
-                    <dt><span class="property-type"></span></dt>
+                    <dt>payload.min_price_inc_vat<span class="property-type">float</span></dt>
                     <dd>Minimum Price within available data</dd>
-                    <dt><span class="property-type"></span></dt>
+                    <dt>payload.max_price_inc_vat<span class="property-type">float</span></dt>
                     <dd>Maximum Price within available data</dd>
-                    <dt><span class="property-type"></span></dt>
+                    <dt>min_blocks<span class="property-type">Array</span></dt>
                     <dd>An array of minimum price blocks</dd>
                     <ul>
-                        <dt><span class="property-type"></span></dt>
+                        <dt>min Block Price<span class="property-type">float</span></dt>
                         <dd>Block Price (average over periods)</dd>
-                        <dt><span class="property-type"></span></dt>
+                        <dt>min Block valid From<span class="property-type">ISO Date</span></dt>
                         <dd>Valid from (when block period starts)</dd>
-                        <dt><span class="property-type"></span></dt>
+                        <dt>min_block_size_mins<span class="property-type">integer</span></dt>
                         <dd>Length of block in minutes</dd>
                     </ul>
+                </dl>
+            </li>
+            <li>InfluxDB Formatted Data (influxdb out node)
+                <dl class="message-properties">
+                    <dt>payload<span class="property-type">array</span></dt>
+                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile'</dd>
+                    <dt>measurement<span class="property-type">string</span></dt>
+                    <dd>A value for the InfluxDB measurement value (default OctopusPrice). 
+                        Can be overwritten in the InfluxDB input node</dd>
                 </dl>
             </li>
         </ol>
 
     <h3>Details</h3>
-        <p>The Octopus Agile API provides the ability to query how much energy will cost
-            in the future. The data is broken up into 30 min periods. The data for the next 24Hrs (23:00 - 23:00) is released 
-            at approximately 16:00. The number of data periods returned by the API varies between approximately 15 and 63.
-        <p>This node returns the raw data and a set of processed data most likely to be useful to the user.
+        <p>Query the Octopus Agile API for future pricing.
+        <p>The pricing data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
+            at approximately 16:00Z. The request is set to obtain all data available from now so the number of data periods 
+            returned by the API varies between approximately 15 and 63.
+        <p>This node has 3 outputs; the raw data, a set of processed data most likely to be useful to the user and a preformatted output for InfluxDB.
         <p>The API is queried once per 30 minute period as close to the boundary as possible. To force the node to
             request the data, the flow must be re-deployed.
 
     <h3>References</h3>
         <ul>
-            <li><a>Octopus API docs</a> https://developer.octopus.energy/docs/api</li>
+            <li><a href="https://developer.octopus.energy/docs/api/">Octopus API docs</a> </li>
         </ul>
 </script>
 
@@ -101,7 +112,8 @@
             numblocks: {value:"4"}
         },
         inputs:1,
-        outputs:2,
+        outputs:3,
+        outputLabels: ["raw","processed","influxdb"],
         icon: "octopus.png",
         align: "right",
         label: function() {

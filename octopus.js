@@ -100,6 +100,16 @@ module.exports = function(RED) {
                                 });
                                 msg2.payload.min_blocks = blocks_output;
 
+                                var msg3 = {};
+                                msg3.payload = [];
+
+                                msg.payload.results.forEach(function(item, index) {
+                                    msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
+                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
+                                });
+
+                                msg3.measurement = "OctopusPrice";
+
                                 next_run = next_half_hour;
                             }
                             catch(err) {
@@ -107,7 +117,7 @@ module.exports = function(RED) {
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            node.send([msg, msg2]);
+                            node.send([msg, msg2, msg3]);
                         }
                     });
                 }).on('error', function(e) {
