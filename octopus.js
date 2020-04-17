@@ -33,7 +33,7 @@ module.exports = function(RED) {
         var next_run = new Date(0);
 
         this.on("input", function(msg) {
-            node.warn(msg);
+            node.warn(isNan(msg));
             var now = new Date(); 
             var next_half_hour_ts = Math.trunc(Math.floor(((now.getTime()/1000)+(30*60))/1800))*1800*1000;
             var next_half_hour = new Date(next_half_hour_ts);
