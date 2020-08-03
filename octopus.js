@@ -113,7 +113,7 @@ module.exports = function(RED) {
 
                                 var msg3 = {};
                                 msg3.payload = [];
-								if (this.tariff == "OUTGOING") {
+								if (APIurl.includes("OUTGOING")) {
 									msg.payload.results.forEach(function(item, index) {
 										msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Outgoing"}]);
