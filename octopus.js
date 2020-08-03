@@ -26,9 +26,9 @@ module.exports = function(RED) {
           });
         }
     
-        this.region = n.region
+        this.region = n.region;
 		
-		this.tariff = n.tariff
+		this.tariff = n.tariff;
 		
 		var baseurl = "";
 		
@@ -117,11 +117,12 @@ module.exports = function(RED) {
 									msg.payload.results.forEach(function(item, index) {
 										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
-                                });
+									
 								} else {
 									msg.payload.results.forEach(function(item, index) {
 										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Outgoing"}]);
+									});
 								}
                                 msg3.measurement = "OctopusPrice";
 
