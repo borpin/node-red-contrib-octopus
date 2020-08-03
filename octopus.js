@@ -115,12 +115,12 @@ module.exports = function(RED) {
                                 msg3.payload = [];
 								if (this.tariff == "AGILE") {
 									msg.payload.results.forEach(function(item, index) {
-										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
+										msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
                                     });
 								} else {
 									msg.payload.results.forEach(function(item, index) {
-										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
+										msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Outgoing"}]);
 									});
 								}
