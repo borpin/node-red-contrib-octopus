@@ -117,7 +117,7 @@ module.exports = function(RED) {
 									msg.payload.results.forEach(function(item, index) {
 										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
-									
+                                    });
 								} else {
 									msg.payload.results.forEach(function(item, index) {
 										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
@@ -127,8 +127,7 @@ module.exports = function(RED) {
                                 msg3.measurement = "OctopusPrice";
 
                                 next_run = next_half_hour;
-                            }
-                            catch(err) {
+                            } catch(err) {
                                 node.error(err,msg);
                                 // Failed to parse, pass it on
                             }
