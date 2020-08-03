@@ -189,5 +189,5 @@ module.exports = function(RED) {
 
 
 
-    RED.nodes.registerType("octopus in",octopusin);
+    RED.nodes.registerType("octopus in tj",octopusin);
 }
