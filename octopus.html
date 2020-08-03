@@ -22,6 +22,14 @@
             <option value="P">_P - North Scotland</option>
         </select>
     </div>
+	<div class="form-row">
+        <label for="node-input-tariff"><i class="fa fa-tag"></i> Tariff Type</label>
+        <select id="node-input-tariff" style="width:120px;">
+            <option value="AGILE">Agile</option>
+            <option value="OUTGOING">Agile Outgoing</option>
+
+        </select>
+    </div>
     <div class="form-row">
         <label for="node-input-numblocks"><i class="fa fa-globe"></i> Period length</label>
         <input type="text" id="node-input-numblocks">
@@ -90,7 +98,7 @@
         </ol>
 
     <h3>Details</h3>
-        <p>Query the Octopus Agile API for future pricing.
+        <p>Query the Octopus Agile (or Agile Outgoing) API for future pricing.
         <p>The pricing data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
             at approximately 16:00Z. The request is set to obtain all data available from now so the number of data periods 
             returned by the API varies between approximately 15 and 63.
@@ -111,15 +119,16 @@
         defaults: {
             name: {value:"Octopus"},
             region: {value:"A"},
+			tariff: {value:"AGILE"},
             numblocks: {value:"4"}
         },
         inputs:1,
-        outputs:3,
+        outputs:4,
         outputLabels: ["raw","processed","influxdb"],
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region;
+            return this.name||this.region||this.tariff;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";

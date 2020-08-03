@@ -27,8 +27,16 @@ module.exports = function(RED) {
         }
     
         this.region = n.region
-
-        var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+		
+		this.tariff = n.tariff
+		
+		var baseurl = "";
+		
+		if (this.tariff == "AGILE") {
+			baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+		} else {
+			baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+		}
         var https = require("https");
         var next_run = new Date(0);
 
@@ -105,12 +113,16 @@ module.exports = function(RED) {
 
                                 var msg3 = {};
                                 msg3.payload = [];
-
-                                msg.payload.results.forEach(function(item, index) {
-                                    msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
+								if (this.tariff == "AGILE") {
+									msg.payload.results.forEach(function(item, index) {
+										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
                                                         "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
                                 });
-
+								} else {
+									msg.payload.results.forEach(function(item, index) {
+										sg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
+                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Outgoing"}]);
+								}
                                 msg3.measurement = "OctopusPrice";
 
                                 next_run = next_half_hour;

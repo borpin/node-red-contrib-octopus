@@ -3,7 +3,7 @@ node-red-contrib-octopus
 
 # Under Development
 
-A <a href="https://nodered.org" target="_new">Node-RED</a> node to extract the <a href="https://octopus.energy" target="_new">Octopus Agile</a> future price data via the API.
+A <a href="https://nodered.org" target="_new">Node-RED</a> node to extract the <a href="https://octopus.energy" target="_new">Octopus Agile</a> (or Agile Outgoing) future price data via the API.
 
 My [referral code](https://share.octopus.energy/wise-jade-356) if you are switching to Octopus and feel kind.
 
