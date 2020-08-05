@@ -27,7 +27,13 @@
         <select id="node-input-tariff" style="width:130px;">
             <option value="AGILE">Agile</option>
             <option value="OUTGOING">Agile Outgoing</option>
-
+        </select>
+    </div>
+	<div class="form-row">
+        <label for="node-input-minmax"><i class="fa fa-tag"></i> Select maximum or minimum cost period using block number below</label>
+        <select id="node-input-minmax" style="width:220px;">
+            <option value="MAX">Maximum Value (most expensive)</option>
+            <option value="MIN">Minimum Value (cheapest)</option>
         </select>
     </div>
     <div class="form-row">
@@ -74,14 +80,14 @@
                     <dd>Minimum Price within available data</dd>
                     <dt>payload.max_price_inc_vat<span class="property-type">float</span></dt>
                     <dd>Maximum Price within available data</dd>
-                    <dt>min_blocks<span class="property-type">Array</span></dt>
-                    <dd>An array of minimum price blocks</dd>
+                    <dt>minmax_blocks<span class="property-type">Array</span></dt>
+                    <dd>An array of price blocks, either minimum or maximum depending on option chosen</dd>
                     <ul>
-                        <dt>min Block Price<span class="property-type">float</span></dt>
+                        <dt>min/max Block Price<span class="property-type">float</span></dt>
                         <dd>Block Price (average over periods)</dd>
-                        <dt>min Block valid From<span class="property-type">ISO Date</span></dt>
+                        <dt>min/max Block valid From<span class="property-type">ISO Date</span></dt>
                         <dd>Valid from (when block period starts)</dd>
-                        <dt>min_block_size_mins<span class="property-type">integer</span></dt>
+                        <dt>block_size_mins<span class="property-type">integer</span></dt>
                         <dd>Length of block in minutes</dd>
                     </ul>
                 </dl>
@@ -89,7 +95,7 @@
             <li>InfluxDB Formatted Data (influxdb out node)
                 <dl class="message-properties">
                     <dt>payload<span class="property-type">array</span></dt>
-                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile'</dd>
+                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile' or 'Outgoing' depending on the tariff chosen</dd>
                     <dt>measurement<span class="property-type">string</span></dt>
                     <dd>A value for the InfluxDB measurement value (default OctopusPrice). 
                         Can be overwritten in the InfluxDB input node</dd>
@@ -120,6 +126,7 @@
             name: {value:"Octopus"},
             region: {value:"A"},
 			tariff: {value:"AGILE"},
+			minmax: {value:"MIN"},
             numblocks: {value:"4"}
         },
         inputs:1,
@@ -128,7 +135,7 @@
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region||this.tariff;
+            return this.name||this.region||this.tariff||this.minmax;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";

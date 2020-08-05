@@ -25,17 +25,17 @@ module.exports = function(RED) {
             return parseInt(item.trim());
           });
         }
-    
-        this.region = n.region;
+
 		
-		this.tariff = n.tariff;
+        var baseurl = "";
+        var influxDBsource ="";
 		
-		var baseurl = "";
-		
-		if (this.tariff == "OUTGOING") {
-			baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+		if (n.tariff == "OUTGOING") {
+            baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+            influxDBsource = {"source" : "Outgoing"};
 		} else {
-			baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+            baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+            influxDBsource = {"source" : "Agile"};
 		}
         var https = require("https");
         var next_run = new Date(0);
@@ -59,9 +59,9 @@ module.exports = function(RED) {
                 // add start and end used to msg - strip milliseconds
                 msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
-                msg.region = this.region;
+                msg.region = n.region;
     
-                var APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+                var APIurl = baseurl + n.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
@@ -102,28 +102,30 @@ module.exports = function(RED) {
                                         }
                                         // blocks are now listed in same order as main data (push each item of an array reverses it)
                                         // msg.blocks = blocks_result;
-                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
-                                        msg.min_block_start = min_block_start;
-
-                                        blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
+										let minmax_block_start = "";
+										if (n.minmax == "MIN") {
+											minmax_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
+											msg.minmax_block_start = minmax_block_start;
+											blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+										} else if (n.minmax == "MAX") {
+											minmax_block_start = blocks_result.indexOf(Math.max(...blocks_result)) + block - 1;
+											msg.minmax_block_start = minmax_block_start;
+											blocks_output.push({ "Max Block Price": Math.max(...blocks_result), "Max Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+										}
+                                        
+                                        //blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "min_block_size_mins": block * 30 });
                                         // msg2.payload.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
                                 });
-                                msg2.payload.min_blocks = blocks_output;
+                                msg2.payload.minmax_blocks = blocks_output;
 
                                 var msg3 = {};
                                 msg3.payload = [];
-								if (n.tariff == "OUTGOING") {
 									msg.payload.results.forEach(function(item, index) {
 										msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
-                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Outgoing"}]);
+                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, influxDBsource]);
                                     });
-								} else {
-									msg.payload.results.forEach(function(item, index) {
-										msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
-                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
-									});
-								}
+								
                                 msg3.measurement = "OctopusPrice";
 
                                 next_run = next_half_hour;
