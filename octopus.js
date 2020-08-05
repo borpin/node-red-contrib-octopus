@@ -105,11 +105,9 @@ module.exports = function(RED) {
 										let minmax_block_start = "";
 										if (n.minmax == "MIN") {
 											minmax_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
-											msg.minmax_block_start = minmax_block_start;
 											blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
 										} else if (n.minmax == "MAX") {
 											minmax_block_start = blocks_result.indexOf(Math.max(...blocks_result)) + block - 1;
-											msg.minmax_block_start = minmax_block_start;
 											blocks_output.push({ "Max Block Price": Math.max(...blocks_result), "Max Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
 										}
                                         
