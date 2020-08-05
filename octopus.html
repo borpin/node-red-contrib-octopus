@@ -30,11 +30,12 @@
         </select>
     </div>
 	<div class="form-row">
-        <label for="node-input-minmax"><i class="fa fa-tag"></i> Select maximum or minimum cost period using block number below</label>
-        <select id="node-input-minmax" style="width:220px;">
-            <option value="MAX">Maximum Value (most expensive)</option>
-            <option value="MIN">Minimum Value (cheapest)</option>
+        <label for="node-input-minmax"><i class="fa fa-tag"></i> Minimum vs Maximum</label>
+        <select id="node-input-minmax" style="width:300px;">
+			<option value="MIN">Minimum Price (cheapest)</option>
+            <option value="MAX">Maximum Price (most expensive)</option>
         </select>
+		<div class="form-tips">Whether to calculate the minimum or maximum priced block using the <b>Period length</b> below.</div>
     </div>
     <div class="form-row">
         <label for="node-input-numblocks"><i class="fa fa-globe"></i> Period length</label>
