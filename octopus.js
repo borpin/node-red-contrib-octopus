@@ -155,8 +155,16 @@ module.exports = function(RED) {
 																"time": new Date(item.interval_start).getTime() * 1000 * 1000}, consumptionDBsource]);
 														});
 													msg4.measurement = "OctopusConsumption";
+												} catch(err) {
+													node.error(err,msg);
+													// Failed to parse, pass it on
+												}
+											}
 													
-													
+										});	
+									}).on('error', function(e) {
+										node.error(e,msg);
+									});
 								}
 								
 								
