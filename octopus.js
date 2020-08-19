@@ -135,7 +135,7 @@ module.exports = function(RED) {
 								if (n.apikey != "none") {
 									
 									var options = {
-										host: 'api.octopus.energy',
+										host: 'https://api.octopus.energy',
 										port: 443,
 										path: n.consumptionurl,
 										// authentication headers
@@ -143,14 +143,14 @@ module.exports = function(RED) {
 											'Authorization': 'Basic ' + new Buffer(n.apikey + ':').toString('base64')
 										}   
 									};
-									https.get(options, function(res) {
-										outputx.rc = res.statusCode;
+									https.get(options, function(resc) {
+										outputx.rc = resc.statusCode;
 										outputx.payload = "";
-										res.setEncoding('utf8');
-										res.on('data', function(chunk) {
+										resc.setEncoding('utf8');
+										resc.on('data', function(chunk) {
 											outputx.payload += chunk;
 										});
-										res.on('end', function() {
+										resc.on('end', function() {
 											if (outputx.rc === 200) {
 												try {
 													outputx.payload = JSON.parse(outputx.payload);
