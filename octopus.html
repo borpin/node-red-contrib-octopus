@@ -41,10 +41,14 @@
         <label for="node-input-numblocks"><i class="fa fa-globe"></i> Period length</label>
         <input type="text" id="node-input-numblocks">
     </div>
-    <!-- <div class="form-row">
-        <label for="node-config-input-apikey"><i class="fa fa-tasks"></i> API key</label>
-        <input type="text" id="node-config-input-apikey">
-    </div> -->
+    <div class="form-row">
+        <label for="node-input-apikey"><i class="fa fa-tasks"></i> API key</label>
+        <input type="text" id="node-input-apikey">
+    </div>
+	<div class="form-row">
+        <label for="node-input-consumptionurl"><i class="fa fa-tasks"></i> API Consumption URL</label>
+        <input type="text" id="node-input-consumptionurl">
+    </div>
     <div class="form-tips">The <b>Period length</b> is the number of 30 minute blocks to average to find cheapest period of that length (e.g. 2,4 for 60 min and 120min periods).</div>
 </script>
 
@@ -128,15 +132,17 @@
             region: {value:"A"},
 			tariff: {value:"AGILE"},
 			minmax: {value:"MIN"},
-            numblocks: {value:"4"}
+            numblocks: {value:"4"},
+			apikey: {value:"none"},
+			consupmtionurl: {value:"none"}
         },
         inputs:1,
-        outputs:3,
-        outputLabels: ["raw","processed","influxdb"],
+        outputs:4,
+        outputLabels: ["raw","processed","influxdb","influxdbconsumption],
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region||this.tariff||this.minmax;
+            return this.name||this.region||this.tariff||this.minmax||this.apikey;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";

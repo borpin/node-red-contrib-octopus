@@ -29,6 +29,7 @@ module.exports = function(RED) {
 		
         var baseurl = "";
         var influxDBsource ="";
+		var consumptionDBsource = {"source" : "Agile"};
 		
 		if (n.tariff == "OUTGOING") {
             baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
@@ -127,12 +128,49 @@ module.exports = function(RED) {
                                 msg3.measurement = "OctopusPrice";
 
                                 next_run = next_half_hour;
+								
+								
+								var msg4 = {};
+								var outputx = {};
+								if (n.apikey != "none") {
+									https.get(n.consumptionurl, function(res) {
+										outputx.rc = res.statusCode;
+										outputx.payload = "";
+										res.setEncoding('utf8');
+										res.on('data', function(chunk) {
+											outputx.payload += chunk;
+										});
+										res.on('end', function() {
+											if (outputx.rc === 200) {
+												try {
+													outputx.payload = JSON.parse(outputx.payload);
+													// Extract the inc VAt prices into an Array
+													outputx.consumption_array = outputx.payload.results.map(a => a.consumption);
+													// map returns results in reverse (probably includes a push) - put back in same order as main data.
+													outputx.price_array.reverse();
+													
+													msg4.payload = [];
+														outputx.payload.results.forEach(function(item, index) {
+															msg4.payload.push([{ consumption : item.consumption, 
+																"time": new Date(item.interval_start).getTime() * 1000 * 1000}, consumptionDBsource]);
+														});
+													msg4.measurement = "OctopusConsumption";
+													
+													
+								}
+								
+								
+								
+								
+								
+								
+								
                             } catch(err) {
                                 node.error(err,msg);
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            node.send([msg, msg2, msg3]);
+                            node.send([msg, msg2, msg3, msg4]);
                         }
                     });
                 }).on('error', function(e) {
