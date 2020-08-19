@@ -135,12 +135,12 @@ module.exports = function(RED) {
 								if (n.apikey != "none") {
 									
 									var options = {
-										host: 'https://api.octopus.energy',
+										host: 'api.octopus.energy',
 										port: 443,
 										path: n.consumptionurl,
 										// authentication headers
 										headers: {
-											'Authorization': 'Basic ' + new Buffer(n.apikey + ':').toString('base64')
+											'Authorization' : 'Basic ' + new Buffer(n.apikey + ':').toString('base64')
 										}   
 									};
 									https.get(options, function(resc) {
@@ -165,6 +165,8 @@ module.exports = function(RED) {
 													node.error(err,outputx);
 													// Failed to parse, pass it on
 												}
+											} else {
+												console.log(outputx.payload);
 											}
 													
 										});	
