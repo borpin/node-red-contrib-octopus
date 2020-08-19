@@ -166,7 +166,7 @@ module.exports = function(RED) {
 													// Failed to parse, pass it on
 												}
 											} else {
-												console.log(outputx.payload);
+												msg4.payload = outputx.payload;
 											}
 													
 										});	
