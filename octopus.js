@@ -63,7 +63,7 @@ module.exports = function(RED) {
                 msg.region = n.region;
     
                 var APIurl = baseurl + n.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
-    
+				
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
                     msg.payload = "";
@@ -133,7 +133,17 @@ module.exports = function(RED) {
 								var msg4 = {};
 								var outputx = {};
 								if (n.apikey != "none") {
-									https.get(n.consumptionurl, function(res) {
+									
+									var options = {
+										host: 'api.octopus.energy',
+										port: 443,
+										path: n.consumptionurl,
+										// authentication headers
+										headers: {
+											'Authorization': 'Basic ' + new Buffer(n.apikey + ':').toString('base64')
+										}   
+									};
+									https.get(options, function(res) {
 										outputx.rc = res.statusCode;
 										outputx.payload = "";
 										res.setEncoding('utf8');
