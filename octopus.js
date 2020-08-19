@@ -162,14 +162,14 @@ module.exports = function(RED) {
 														});
 													msg4.measurement = "OctopusConsumption";
 												} catch(err) {
-													node.error(err,msg);
+													node.error(err,outputx);
 													// Failed to parse, pass it on
 												}
 											}
 													
 										});	
 									}).on('error', function(e) {
-										node.error(e,msg);
+										node.error(e,outputx);
 									});
 								}
 								
