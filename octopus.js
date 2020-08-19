@@ -144,10 +144,6 @@ module.exports = function(RED) {
 											if (outputx.rc === 200) {
 												try {
 													outputx.payload = JSON.parse(outputx.payload);
-													// Extract the inc VAt prices into an Array
-													outputx.consumption_array = outputx.payload.results.map(a => a.consumption);
-													// map returns results in reverse (probably includes a push) - put back in same order as main data.
-													outputx.price_array.reverse();
 													
 													msg4.payload = [];
 														outputx.payload.results.forEach(function(item, index) {
