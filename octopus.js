@@ -131,7 +131,7 @@ module.exports = function(RED) {
                                 next_run = next_half_hour;
 								
 								
-								var msg4 = {};
+								
 								var outputx = {};
 								if (n.apikey != "none") {
 									
@@ -153,8 +153,7 @@ module.exports = function(RED) {
 										resc.on('data', function(chunk) {
 											outputx.payload += chunk;
 											msg4.payload = [];
-										});
-										console.log("4");
+										});										
 										resc.on('end', function() {
 											if (outputx.rc === 200) {
 												try {
@@ -179,9 +178,7 @@ module.exports = function(RED) {
 									}).on('error', function(e) {
 										node.error(e,outputx);
 									});
-								} else {
-									msg4 = msg3;
-								}
+								} 
 								
 								
 								
