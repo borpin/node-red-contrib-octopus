@@ -151,7 +151,6 @@ module.exports = function(RED) {
 										resc.setEncoding('utf8');
 										resc.on('data', function(chunk) {
 											outputx.payload += chunk;
-											msg4.payload = [];
 										});										
 										resc.on('end', function() {
 											if (outputx.rc === 200) {
@@ -159,10 +158,14 @@ module.exports = function(RED) {
 													outputx.payload = JSON.parse(outputx.payload);
 													console.log("8");
 													msg4.payload = [];
+													console.log(msg4.payload);
 													outputx.payload.results.forEach(function(item, index) {												
 														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
 													});
+													console.log(msg4.payload);
+												
 													msg4.measurement = "OctopusConsumption";
+													console.log(msg4.measurement);
 												} catch(err) {
 													node.error(err,outputx);
 													console.log("Error 1");
