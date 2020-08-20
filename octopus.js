@@ -71,6 +71,7 @@ module.exports = function(RED) {
                     res.on('data', function(chunk) {
                         msg.payload += chunk;
                     });
+					var msg4 = {};
                     res.on('end', function() {
                         if (msg.rc === 200) {
                             try {
@@ -143,25 +144,22 @@ module.exports = function(RED) {
 											'Authorization': 'Basic ' + new Buffer(n.apikey).toString('base64')
 										}   
 									};
-									console.log("1");
+									
 									https.get(options, function(resc) {
-										console.log("2");
 										outputx.rc = resc.statusCode;
 										console.log(outputx.rc);
 										outputx.payload = [];
 										resc.setEncoding('utf8');
 										resc.on('data', function(chunk) {
-											console.log("3");
 											outputx.payload += chunk;
 											msg4.payload = [];
 										});
 										console.log("4");
 										resc.on('end', function() {
-											console.log("5");
 											if (outputx.rc === 200) {
-												console.log("6");
 												try {
 													outputx.payload = JSON.parse(outputx.payload);
+													console.log(outputx.payload);
 													console.log("8");
 													msg4.payload = [];
 														outputx.payload.results.forEach(function(item, index) {
