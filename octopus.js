@@ -173,6 +173,8 @@ module.exports = function(RED) {
 									}).on('error', function(e) {
 										node.error(e,outputx);
 									});
+								} else {
+									msg4 = msg3;
 								}
 								
 								
