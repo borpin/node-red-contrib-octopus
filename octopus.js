@@ -140,7 +140,7 @@ module.exports = function(RED) {
 										path: n.consumptionurl,
 										// authentication headers
 										headers: {
-											'Authorization' : 'Basic ' + new Buffer(n.apikey + ':').toString('base64')
+											'Authorization': 'Basic ' + new Buffer(n.apikey).toString('base64')
 										}   
 									};
 									https.get(options, function(resc) {
@@ -168,7 +168,7 @@ module.exports = function(RED) {
 											} else {
 												msg4.payload = outputx.payload;
 											}
-													
+											msg4.payload = outputx.payload;		
 										});	
 									}).on('error', function(e) {
 										node.error(e,outputx);
