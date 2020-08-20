@@ -131,6 +131,7 @@ module.exports = function(RED) {
 								
 								
 								var outputx = {};
+								var msg4 = {};
 								if (n.apikey != "none") {
 									
 									var options = {
