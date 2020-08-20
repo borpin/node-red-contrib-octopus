@@ -145,10 +145,11 @@ module.exports = function(RED) {
 									};
 									https.get(options, function(resc) {
 										outputx.rc = resc.statusCode;
-										outputx.payload = "";
+										outputx.payload = [];
 										resc.setEncoding('utf8');
 										resc.on('data', function(chunk) {
 											outputx.payload += chunk;
+											msg4.payload = [];
 										});
 										resc.on('end', function() {
 											if (outputx.rc === 200) {
@@ -165,10 +166,7 @@ module.exports = function(RED) {
 													node.error(err,outputx);
 													// Failed to parse, pass it on
 												}
-											} else {
-												msg4.payload = outputx.payload;
-											}
-											msg4.payload = outputx.payload;		
+
 										});	
 									}).on('error', function(e) {
 										node.error(e,outputx);
