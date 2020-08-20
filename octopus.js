@@ -157,11 +157,9 @@ module.exports = function(RED) {
 											if (outputx.rc === 200) {
 												try {
 													outputx.payload = JSON.parse(outputx.payload);
-													console.log(outputx.payload);
 													console.log("8");
 													msg4.payload = [];
-													outputx.payload.results.forEach(function(item, index) {
-														console.log(item);
+													outputx.payload.results.forEach(function(item, index) {												
 														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
 													});
 													msg4.measurement = "OctopusConsumption";
