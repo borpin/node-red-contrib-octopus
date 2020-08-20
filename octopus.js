@@ -71,7 +71,6 @@ module.exports = function(RED) {
                     res.on('data', function(chunk) {
                         msg.payload += chunk;
                     });
-					var msg4 = {};
                     res.on('end', function() {
                         if (msg.rc === 200) {
                             try {
@@ -161,11 +160,9 @@ module.exports = function(RED) {
 													console.log(msg4.payload);
 													outputx.payload.results.forEach(function(item, index) {												
 														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
-													});
-													console.log(msg4.payload);
-												
+													});											
 													msg4.measurement = "OctopusConsumption";
-													console.log(msg4.measurement);
+													 node.send([msg, msg2, msg3, msg4]);
 												} catch(err) {
 													node.error(err,outputx);
 													console.log("Error 1");
@@ -180,7 +177,9 @@ module.exports = function(RED) {
 										node.error(e,outputx);
 										console.log("Error 2");
 									});
-								} 
+								} else {
+									 node.send([msg, msg2, msg3, msg4]);
+								}
 								
 								
 								
@@ -193,7 +192,7 @@ module.exports = function(RED) {
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            node.send([msg, msg2, msg3, msg4]);
+                           
                         }
                     });
                 }).on('error', function(e) {
