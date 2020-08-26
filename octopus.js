@@ -145,8 +145,7 @@ module.exports = function(RED) {
 									};
 									
 									https.get(options, function(resc) {
-										outputx.rc = resc.statusCode;
-										console.log(outputx.rc);
+										outputx.rc = resc.statusCode;		
 										outputx.payload = [];
 										resc.setEncoding('utf8');
 										resc.on('data', function(chunk) {
@@ -156,9 +155,8 @@ module.exports = function(RED) {
 											if (outputx.rc === 200) {
 												try {
 													outputx.payload = JSON.parse(outputx.payload);
-													console.log("8");
 													msg4.payload = [];
-													console.log(msg4.payload);
+												
 													outputx.payload.results.forEach(function(item, index) {												
 														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
 													});											
@@ -166,17 +164,13 @@ module.exports = function(RED) {
 													 node.send([msg, msg2, msg3, msg4]);
 												} catch(err) {
 													node.error(err,outputx);
-													console.log("Error 1");
 													// Failed to parse, pass it on
 												}
-											} else {
-												console.log("7");
-											}
+											} 
 
 										});	
 									}).on('error', function(e) {
 										node.error(e,outputx);
-										console.log("Error 2");
 									});
 								} else {
 									 node.send([msg, msg2, msg3, msg4]);
