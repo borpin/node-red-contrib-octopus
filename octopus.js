@@ -106,10 +106,10 @@ module.exports = function(RED) {
 										let minmax_block_start = "";
 										if (n.minmax == "MIN") {
 											minmax_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
-											blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+											blocks_output.push({ "min_block_price": Math.min(...blocks_result), "min_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
 										} else if (n.minmax == "MAX") {
 											minmax_block_start = blocks_result.indexOf(Math.max(...blocks_result)) + block - 1;
-											blocks_output.push({ "Max Block Price": Math.max(...blocks_result), "Max Block valid From":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+											blocks_output.push({ "max_block_price": Math.max(...blocks_result), "max_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
 										}
                                         
                                         //blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "min_block_size_mins": block * 30 });
