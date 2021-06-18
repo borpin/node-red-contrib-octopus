@@ -25,10 +25,19 @@ module.exports = function(RED) {
             return parseInt(item.trim());
           });
         }
-    
-        this.region = n.region
 
-        var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+		
+        var baseurl = "";
+        var influxDBsource ="";
+		var consumptionDBsource = {"source" : "Agile"};
+		
+		if (n.tariff == "OUTGOING") {
+            baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+            influxDBsource = {"source" : "Outgoing"};
+		} else {
+            baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+            influxDBsource = {"source" : "Agile"};
+		}
         var https = require("https");
         var next_run = new Date(0);
 
@@ -51,10 +60,10 @@ module.exports = function(RED) {
                 // add start and end used to msg - strip milliseconds
                 msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
-                msg.region = this.region;
+                msg.region = n.region;
     
-                var APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
-    
+                var APIurl = baseurl + n.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+				
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
                     msg.payload = "";
@@ -94,33 +103,91 @@ module.exports = function(RED) {
                                         }
                                         // blocks are now listed in same order as main data (push each item of an array reverses it)
                                         // msg.blocks = blocks_result;
-                                        let min_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
-                                        msg.min_block_start = min_block_start;
-
-                                        blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": block * 30 });
+										let minmax_block_start = "";
+										if (n.minmax == "MIN") {
+											minmax_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
+											blocks_output.push({ "min_block_price": Math.min(...blocks_result), "min_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+										} else if (n.minmax == "MAX") {
+											minmax_block_start = blocks_result.indexOf(Math.max(...blocks_result)) + block - 1;
+											blocks_output.push({ "max_block_price": Math.max(...blocks_result), "max_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+										}
+                                        
+                                        //blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "min_block_size_mins": block * 30 });
                                         // msg2.payload.min_block = { "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[min_block_start].valid_from, "min_block_size_mins": num_blocks * 30 };
                                     }
                                 });
-                                msg2.payload.min_blocks = blocks_output;
+                                msg2.payload.minmax_blocks = blocks_output;
 
                                 var msg3 = {};
                                 msg3.payload = [];
-
-                                msg.payload.results.forEach(function(item, index) {
-                                    msg3.payload.push([{ value_inc_vat : item.value_inc_vat, 
-                                                        "time": new Date(item.valid_from).getTime() *1000 *1000}, {"source" : "Agile"}]);
+								msg.payload.results.forEach(function(item, index) {
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000}, influxDBsource]);
                                 });
-
+								
                                 msg3.measurement = "OctopusPrice";
 
                                 next_run = next_half_hour;
-                            }
-                            catch(err) {
+								
+								
+								
+								var outputx = {};
+								var msg4 = {};
+								if (n.apikey != "none") {
+									
+									var options = {
+										host: 'api.octopus.energy',
+										port: 443,
+										path: n.consumptionurl,
+										// authentication headers
+										headers: {
+											'Authorization': 'Basic ' + new Buffer(n.apikey).toString('base64')
+										}   
+									};
+									
+									https.get(options, function(resc) {
+										outputx.rc = resc.statusCode;		
+										outputx.payload = [];
+										resc.setEncoding('utf8');
+										resc.on('data', function(chunk) {
+											outputx.payload += chunk;
+										});										
+										resc.on('end', function() {
+											if (outputx.rc === 200) {
+												try {
+													outputx.payload = JSON.parse(outputx.payload);
+													msg4.payload = [];
+												
+													outputx.payload.results.forEach(function(item, index) {												
+														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
+													});											
+													msg4.measurement = "OctopusConsumption";
+													 node.send([msg, msg2, msg3, msg4]);
+												} catch(err) {
+													node.error(err,outputx);
+													// Failed to parse, pass it on
+												}
+											} 
+
+										});	
+									}).on('error', function(e) {
+										node.error(e,outputx);
+									});
+								} else {
+									 node.send([msg, msg2, msg3, msg4]);
+								}
+								
+								
+								
+								
+								
+								
+								
+                            } catch(err) {
                                 node.error(err,msg);
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
-                            node.send([msg, msg2, msg3]);
+                           
                         }
                     });
                 }).on('error', function(e) {

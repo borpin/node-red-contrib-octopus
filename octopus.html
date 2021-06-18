@@ -22,14 +22,33 @@
             <option value="P">_P - North Scotland</option>
         </select>
     </div>
+	<div class="form-row">
+        <label for="node-input-tariff"><i class="fa fa-tag"></i> Tariff Type</label>
+        <select id="node-input-tariff" style="width:130px;">
+            <option value="AGILE">Agile</option>
+            <option value="OUTGOING">Agile Outgoing</option>
+        </select>
+    </div>
+	<div class="form-row">
+        <label for="node-input-minmax"><i class="fa fa-tag"></i> Minimum vs Maximum</label>
+        <select id="node-input-minmax" style="width:300px;">
+			<option value="MIN">Minimum Price (cheapest)</option>
+            <option value="MAX">Maximum Price (most expensive)</option>
+        </select>
+		<div class="form-tips">Whether to calculate the minimum or maximum priced block using the <b>Period length</b> below.</div>
+    </div>
     <div class="form-row">
         <label for="node-input-numblocks"><i class="fa fa-globe"></i> Period length</label>
         <input type="text" id="node-input-numblocks">
     </div>
-    <!-- <div class="form-row">
-        <label for="node-config-input-apikey"><i class="fa fa-tasks"></i> API key</label>
-        <input type="text" id="node-config-input-apikey">
-    </div> -->
+    <div class="form-row">
+        <label for="node-input-apikey"><i class="fa fa-tasks"></i> API key</label>
+        <input type="password" id="node-input-apikey">
+    </div>
+	<div class="form-row">
+        <label for="node-input-consumptionurl"><i class="fa fa-tasks"></i> API Consumption URL</label>
+        <input type="text" id="node-input-consumptionurl">
+    </div>
     <div class="form-tips">The <b>Period length</b> is the number of 30 minute blocks to average to find cheapest period of that length (e.g. 2,4 for 60 min and 120min periods).</div>
 </script>
 
@@ -66,14 +85,14 @@
                     <dd>Minimum Price within available data</dd>
                     <dt>payload.max_price_inc_vat<span class="property-type">float</span></dt>
                     <dd>Maximum Price within available data</dd>
-                    <dt>min_blocks<span class="property-type">Array</span></dt>
-                    <dd>An array of minimum price blocks</dd>
+                    <dt>minmax_blocks<span class="property-type">Array</span></dt>
+                    <dd>An array of price blocks, either minimum or maximum depending on option chosen</dd>
                     <ul>
-                        <dt>min Block Price<span class="property-type">float</span></dt>
+                        <dt>min/max Block Price<span class="property-type">float</span></dt>
                         <dd>Block Price (average over periods)</dd>
-                        <dt>min Block valid From<span class="property-type">ISO Date</span></dt>
+                        <dt>min/max Block valid From<span class="property-type">ISO Date</span></dt>
                         <dd>Valid from (when block period starts)</dd>
-                        <dt>min_block_size_mins<span class="property-type">integer</span></dt>
+                        <dt>block_size_mins<span class="property-type">integer</span></dt>
                         <dd>Length of block in minutes</dd>
                     </ul>
                 </dl>
@@ -81,7 +100,7 @@
             <li>InfluxDB Formatted Data (influxdb out node)
                 <dl class="message-properties">
                     <dt>payload<span class="property-type">array</span></dt>
-                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile'</dd>
+                    <dd>Array of data pairs of value and time. The 'source' is set to 'Agile' or 'Outgoing' depending on the tariff chosen</dd>
                     <dt>measurement<span class="property-type">string</span></dt>
                     <dd>A value for the InfluxDB measurement value (default OctopusPrice). 
                         Can be overwritten in the InfluxDB input node</dd>
@@ -90,7 +109,7 @@
         </ol>
 
     <h3>Details</h3>
-        <p>Query the Octopus Agile API for future pricing.
+        <p>Query the Octopus Agile (or Agile Outgoing) API for future pricing.
         <p>The pricing data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
             at approximately 16:00Z. The request is set to obtain all data available from now so the number of data periods 
             returned by the API varies between approximately 15 and 63.
@@ -111,15 +130,19 @@
         defaults: {
             name: {value:"Octopus"},
             region: {value:"A"},
-            numblocks: {value:"4"}
+			tariff: {value:"AGILE"},
+			minmax: {value:"MIN"},
+            numblocks: {value:"4"},
+			apikey: {value:"none"},
+			consumptionurl: {value:"none"}
         },
         inputs:1,
-        outputs:3,
-        outputLabels: ["raw","processed","influxdb"],
+        outputs:4,
+        outputLabels: ["raw","processed","influxdb","influxdbconsumption"],
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region;
+            return this.name||this.region||this.tariff||this.minmax||this.apikey||this.consumptionurl;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
