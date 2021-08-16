@@ -24,7 +24,7 @@ module.exports = function(RED) {
         if (n.numblocks !== undefined) {
             return parseInt(item.trim());
           };
-        }
+        });
 
 		
         var baseurl = "";
