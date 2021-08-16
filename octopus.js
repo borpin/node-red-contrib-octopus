@@ -23,7 +23,7 @@ module.exports = function(RED) {
           num_blocks = n.numblocks.split(",").map(function(item) {
         if (n.numblocks !== undefined) {
             return parseInt(item.trim());
-          });
+          };
         }
 
 		
