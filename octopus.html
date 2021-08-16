@@ -27,6 +27,7 @@
         <select id="node-input-tariff" style="width:130px;">
             <option value="AGILE">Agile</option>
             <option value="OUTGOING">Agile Outgoing</option>
+			<option value="GO">Go</option>
         </select>
     </div>
 	<div class="form-row">
@@ -109,7 +110,7 @@
         </ol>
 
     <h3>Details</h3>
-        <p>Query the Octopus Agile (or Agile Outgoing) API for future pricing.
+        <p>Query the Octopus Agile, Octopus Go (or Agile Outgoing) API for future pricing.
         <p>The pricing data is broken up into 30 min periods. The data for the next 24Hrs (23:00Z - 23:00Z) is released 
             at approximately 16:00Z. The request is set to obtain all data available from now so the number of data periods 
             returned by the API varies between approximately 15 and 63.

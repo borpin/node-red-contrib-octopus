@@ -20,8 +20,8 @@ module.exports = function(RED) {
         var node = this;
 
         var num_blocks = [];
-        if (n.numblocks !== undefined) {
           num_blocks = n.numblocks.split(",").map(function(item) {
+        if (n.numblocks !== undefined) {
             return parseInt(item.trim());
           });
         }
@@ -34,9 +34,12 @@ module.exports = function(RED) {
 		if (n.tariff == "OUTGOING") {
             baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
             influxDBsource = {"source" : "Outgoing"};
-		} else {
+		} else if (n.tariff == "AGILE") {
             baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
             influxDBsource = {"source" : "Agile"};
+		} else {
+			baseurl = "https://api.octopus.energy/v1/products/GO-21-05-13/electricity-tariffs/E-1R-GO-21-05-13-";
+            influxDBsource = {"source" : "Go"};
 		}
         var https = require("https");
         var next_run = new Date(0);
@@ -58,7 +61,7 @@ module.exports = function(RED) {
                 msg2.payload = {};
                 
                 // add start and end used to msg - strip milliseconds
-                msg.start_time = start_time.replace(/\.[0-9]{3}/, '');
+                msg.start_time = start_time.replace(/\.[0-9]{3}/, '');n
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
                 msg.region = n.region;
     
