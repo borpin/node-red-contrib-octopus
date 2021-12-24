@@ -67,6 +67,7 @@ module.exports = function(RED) {
     
                 var APIurl = baseurl + n.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
 				
+                print(APIurl);
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
                     msg.payload = "";
@@ -187,6 +188,8 @@ module.exports = function(RED) {
 								
                             } catch(err) {
                                 node.error(err,msg);
+                                
+                                
                                 // Failed to parse, pass it on
                             }
                             // set time for next request on success
