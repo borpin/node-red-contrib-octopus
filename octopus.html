@@ -135,6 +135,7 @@
         defaults: {
             name: {value:"Octopus"},
             region: {value:"A"},
+			baseurl: {value:""},
 			tariff: {value:"AGILE"},
 			minmax: {value:"MIN"},
             numblocks: {value:"4"},
@@ -147,7 +148,7 @@
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region||this.tariff||this.minmax||this.apikey||this.consumptionurl;
+            return this.name||this.region||this.baseurl||this.tariff||this.minmax||this.apikey||this.consumptionurl;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
