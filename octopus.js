@@ -27,18 +27,25 @@ module.exports = function(RED) {
         });
 
 		
-        var baseurl = "";
+        var baseurl = n.baseurl;
         var influxDBsource ="";
 		var consumptionDBsource = {"source" : "Agile"};
 		
+
 		if (n.tariff == "OUTGOING") {
-            baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+			if (n.baseurl == "") {
+				baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
+			}
             influxDBsource = {"source" : "Outgoing"};
 		} else if (n.tariff == "AGILE") {
-            baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+			if (n.baseurl == "") {
+				baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+			}
             influxDBsource = {"source" : "Agile"};
 		} else {
-			baseurl = "https://api.octopus.energy/v1/products/GO-21-05-13/electricity-tariffs/E-1R-GO-21-05-13-";
+			if (n.baseurl == "") {
+				baseurl = "https://api.octopus.energy/v1/products/GO-22-07-05/electricity-tariffs/E-1R-GO-22-07-05-";
+			}
             influxDBsource = {"source" : "Go"};
 		}
         var https = require("https");
