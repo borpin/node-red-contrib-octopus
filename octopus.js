@@ -117,10 +117,10 @@ module.exports = function(RED) {
 										let minmax_block_start = "";
 										if (n.minmax == "MIN") {
 											minmax_block_start = blocks_result.indexOf(Math.min(...blocks_result)) + block - 1;
-											blocks_output.push({ "min_block_price": Math.min(...blocks_result), "min_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+											blocks_output.push({ "min_block_price": Math.min(...blocks_result), "min_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30, identifier: n.comboidentifier });
 										} else if (n.minmax == "MAX") {
 											minmax_block_start = blocks_result.indexOf(Math.max(...blocks_result)) + block - 1;
-											blocks_output.push({ "max_block_price": Math.max(...blocks_result), "max_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30 });
+											blocks_output.push({ "max_block_price": Math.max(...blocks_result), "max_block_valid_from":msg.payload.results[minmax_block_start].valid_from, "block_size_mins": block * 30, identifier: n.comboidentifier });
 										}
                                         
                                         //blocks_output.push({ "min Block Price": Math.min(...blocks_result), "min Block valid From":msg.payload.results[minmax_block_start].valid_from, "min_block_size_mins": block * 30 });
@@ -132,7 +132,7 @@ module.exports = function(RED) {
                                 var msg3 = {};
                                 msg3.payload = [];
 								msg.payload.results.forEach(function(item, index) {
-									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000}, influxDBsource]);
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000}, identifier: n.comboidentifier, influxDBsource]);
                                 });
 								
                                 msg3.measurement = "OctopusPrice";
@@ -169,7 +169,7 @@ module.exports = function(RED) {
 													msg4.payload = [];
 												
 													outputx.payload.results.forEach(function(item, index) {												
-														msg4.payload.push([{ consumption : item.consumption, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
+														msg4.payload.push([{ consumption : item.consumption, "identifier": n.comboidentifier, "time": new Date(item.interval_start).getTime() *1000 *1000}, consumptionDBsource]);
 													});											
 													msg4.measurement = "OctopusConsumption";
 													 node.send([msg, msg2, msg3, msg4]);
