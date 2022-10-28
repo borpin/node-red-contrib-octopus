@@ -132,7 +132,7 @@ module.exports = function(RED) {
                                 var msg3 = {};
                                 msg3.payload = [];
 								msg.payload.results.forEach(function(item, index) {
-									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000}, identifier: n.comboidentifier, influxDBsource]);
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, identifier: n.comboidentifier, "time": new Date(item.valid_from).getTime() *1000 *1000}, influxDBsource]);
                                 });
 								
                                 msg3.measurement = "OctopusPrice";
