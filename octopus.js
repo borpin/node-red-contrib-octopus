@@ -132,7 +132,7 @@ module.exports = function(RED) {
                                 var msg3 = {};
                                 msg3.payload = [];
 								msg.payload.results.forEach(function(item, index) {
-									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, source: influxDBsource}]);
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "tariff", source: influxDBsource}]);
                                 });
 								
                                 msg3.measurement = "OctopusPrice";
@@ -169,7 +169,7 @@ module.exports = function(RED) {
 													msg4.payload = [];
 												
 													outputx.payload.results.forEach(function(item, index) {												
-														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, source: influxDBsource}]);
+														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "consumption", source: influxDBsource}]);
 													});											
 													msg4.measurement = "OctopusConsumption";
 													 node.send([msg, msg2, msg3, msg4]);
