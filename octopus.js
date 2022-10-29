@@ -36,17 +36,17 @@ module.exports = function(RED) {
 			if (n.baseurl == "") {
 				baseurl = "https://api.octopus.energy/v1/products/AGILE-OUTGOING-19-05-13/electricity-tariffs/E-1R-AGILE-OUTGOING-19-05-13-";
 			}
-            influxDBsource = {"source" : "Outgoing"};
+            influxDBsource = "Outgoing";
 		} else if (n.tariff == "AGILE") {
 			if (n.baseurl == "") {
 				baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
 			}
-            influxDBsource = {"source" : "Agile"};
+            influxDBsource = "Agile";
 		} else {
 			if (n.baseurl == "") {
 				baseurl = "https://api.octopus.energy/v1/products/GO-22-07-05/electricity-tariffs/E-1R-GO-22-07-05-";
 			}
-            influxDBsource = {"source" : "Go"};
+            influxDBsource = "Go";
 		}
         var https = require("https");
         var next_run = new Date(0);
@@ -132,7 +132,7 @@ module.exports = function(RED) {
                                 var msg3 = {};
                                 msg3.payload = [];
 								msg.payload.results.forEach(function(item, index) {
-									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, influxDBsource}]);
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, source: influxDBsource}]);
                                 });
 								
                                 msg3.measurement = "OctopusPrice";
@@ -169,7 +169,7 @@ module.exports = function(RED) {
 													msg4.payload = [];
 												
 													outputx.payload.results.forEach(function(item, index) {												
-														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, influxDBsource}]);
+														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, source: influxDBsource}]);
 													});											
 													msg4.measurement = "OctopusConsumption";
 													 node.send([msg, msg2, msg3, msg4]);
