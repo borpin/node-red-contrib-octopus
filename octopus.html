@@ -61,7 +61,7 @@
         <label for="node-input-consumptionurl"><i class="fa fa-tasks"></i> API Consumption URL</label>
         <input type="text" id="node-input-consumptionurl">
 	</div>
-	<div class="form-tips">Example: /v1/electricity-meter-points/IDENTIFIER/meters/IDENTIFIER/consumption/?page_size=5000</div>
+	<div class="form-tips">Example: /v1/electricity-meter-points/MPAN/meters/SERIAL/consumption/?page_size=5000</div>
     
 </script>
 
@@ -148,8 +148,8 @@
 			minmax: {value:"MIN"},
             numblocks: {value:"4"},
 			apikey: {value:"none"},
-			consumptionurl: {value:"none"},
-			comboidentifier: {value:"none",required: true}
+			consumptionurl: {value:""},
+			comboidentifier: {value:"",required: true}
         },
         inputs:1,
         outputs:4,
