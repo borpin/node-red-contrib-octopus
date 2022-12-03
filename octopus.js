@@ -99,7 +99,7 @@ module.exports = function(RED) {
                                 msg2.payload.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.payload.max_price_inc_vat = Math.max(...msg.price_array);
 								
-								metertype = "";
+								var metertype = "";
 								if (n.metertype == "GAS") {
 									metertype = "gas";
 								}
