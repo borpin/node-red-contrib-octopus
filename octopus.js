@@ -100,7 +100,7 @@ module.exports = function(RED) {
                                 msg2.payload.max_price_inc_vat = Math.max(...msg.price_array);
 								
 								metertype = "";
-								if (n.type == "GAS") {
+								if (n.metertype == "GAS") {
 									metertype = "gas";
 								}
 								else {
