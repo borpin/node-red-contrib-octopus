@@ -98,7 +98,15 @@ module.exports = function(RED) {
                                 // Extract min and max prices from available data
                                 msg2.payload.min_price_inc_vat = Math.min(...msg.price_array);
                                 msg2.payload.max_price_inc_vat = Math.max(...msg.price_array);
-
+								
+								metertype = "";
+								if (n.type == "GAS") {
+									metertype = "gas";
+								}
+								else {
+									metertype = "electricity";
+								}
+								
                                 let blocks_output = [];
                                 // put prices array now -> future
                                 var price_array_rev = msg.price_array.reverse();
@@ -132,7 +140,7 @@ module.exports = function(RED) {
                                 var msg3 = {};
                                 msg3.payload = [];
 								msg.payload.results.forEach(function(item, index) {
-									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "tariff", meter: "electricity" , source: influxDBsource}]);
+									msg3.payload.push([{ value_inc_vat : item.value_inc_vat, "time": new Date(item.valid_from).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "tariff", meter: metertype , source: influxDBsource}]);
                                 });
 								
                                 msg3.measurement = "octopus";
@@ -169,7 +177,7 @@ module.exports = function(RED) {
 													msg4.payload = [];
 												
 													outputx.payload.results.forEach(function(item, index) {												
-														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "consumption", meter: "electricity", source: influxDBsource}]);
+														msg4.payload.push([{ consumption : item.consumption,  "time": new Date(item.interval_start).getTime() *1000 *1000},{"identifier": n.comboidentifier, data: "consumption", meter: metertype, source: influxDBsource}]);
 													});											
 													msg4.measurement = "octopus";
 													 node.send([msg, msg2, msg3, msg4]);

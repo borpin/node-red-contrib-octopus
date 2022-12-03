@@ -62,7 +62,13 @@
         <input type="text" id="node-input-consumptionurl">
 	</div>
 	<div class="form-tips">Example: /v1/electricity-meter-points/MPAN/meters/SERIAL/consumption/?page_size=5000</div>
-    
+    <div class="form-row">
+        <label for="node-input-type"><i class="fa fa-tag"></i> Meter Type</label>
+        <select id="node-input-type" style="width:130px;">
+            <option value="GAS">Gas</option>
+            <option value="ELECTRICITY">Electricity</option>
+        </select>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="octopus in">
@@ -149,7 +155,9 @@
             numblocks: {value:"4"},
 			apikey: {value:"none"},
 			consumptionurl: {value:""},
-			comboidentifier: {value:"",required: true}
+			comboidentifier: {value:"",required: true},
+			type: {value:"",required: true}
+			
         },
         inputs:1,
         outputs:4,
@@ -157,7 +165,7 @@
         icon: "octopus.png",
         align: "right",
         label: function() {
-            return this.name||this.region||this.baseurl||this.tariff||this.minmax||this.apikey||this.consumptionurl||this.comboidentifier;
+            return this.name||this.region||this.baseurl||this.tariff||this.minmax||this.apikey||this.consumptionurl||this.comboidentifier||this.type;
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
