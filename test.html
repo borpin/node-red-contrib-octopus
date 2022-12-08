@@ -1,11 +1,10 @@
-<script type="text/x-red" data-template-name="octopus in">
-    <div class="form-row">
+ <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="octopus">
     </div>
 	<div class="form-row">
-        <label for="node-input-comboidentifier"><i class="fa fa-tasks"></i> Combination Identifier</label>
-        <input type="text" id="node-input-comboidentifier" placeholder="Site ID here">
+        <label for="node-input-baseurl"><i class="fa fa-tasks"></i> Combination Identifier</label>
+        <input type="text" id="comboidentifier" placeholder="Site ID here">
     </div>
     <div class="form-row">
         <label for="node-input-region"><i class="fa fa-tag"></i> Energy Region</label>
@@ -37,9 +36,8 @@
 	<div class="form-row">
         <label for="node-input-baseurl"><i class="fa fa-tasks"></i> Tariff Base URL</label>
         <input type="text" id="node-input-baseurl">
-		
+		Example: https://api.octopus.energy/v1/products/GO-22-03-29/electricity-tariffs/E-1R-GO-22-03-29-
     </div>
-	<div class="form-tips">Example: https://api.octopus.energy/v1/products/GO-22-03-29/electricity-tariffs/E-1R-GO-22-03-29-</div>
 	<div class="form-row">
         <label for="node-input-minmax"><i class="fa fa-tag"></i> Minimum vs Maximum</label>
         <select id="node-input-minmax" style="width:300px;">
@@ -51,8 +49,7 @@
     <div class="form-row">
         <label for="node-input-numblocks"><i class="fa fa-globe"></i> Period length</label>
         <input type="text" id="node-input-numblocks">
-    </div></div>
-    <div class="form-tips">The <b>Period length</b> is the number of 30 minute blocks to average to find cheapest period of that length (e.g. 2,4 for 60 min and 120min periods).</div>
+    </div>
     <div class="form-row">
         <label for="node-input-apikey"><i class="fa fa-tasks"></i> API key</label>
         <input type="password" id="node-input-apikey">
@@ -60,15 +57,8 @@
 	<div class="form-row">
         <label for="node-input-consumptionurl"><i class="fa fa-tasks"></i> API Consumption URL</label>
         <input type="text" id="node-input-consumptionurl">
-	</div>
-	<div class="form-tips">Example: /v1/electricity-meter-points/MPAN/meters/SERIAL/consumption/?page_size=5000</div>
-    <div class="form-row">
-        <label for="node-input-metertype"><i class="fa fa-tag"></i> Meter Type</label>
-        <select id="node-input-metertype" style="width:130px;">
-            <option value="GAS">Gas</option>
-            <option value="ELECTRICITY">Electricity</option>
-        </select>
     </div>
+    <div class="form-tips">The <b>Period length</b> is the number of 30 minute blocks to average to find cheapest period of that length (e.g. 2,4 for 60 min and 120min periods).</div>
 </script>
 
 <script type="text/x-red" data-help-name="octopus in">
@@ -140,40 +130,3 @@
         <ul>
             <li><a href="https://developer.octopus.energy/docs/api/">Octopus API docs</a> </li>
         </ul>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('octopus in',{
-        category: 'input',
-        color:"rgb(91, 192, 222)",
-        defaults: {
-            name: {value:"Octopus"},
-            region: {value:"A"},
-			baseurl: {value:""},
-			tariff: {value:"AGILE"},
-			minmax: {value:"MIN"},
-            numblocks: {value:"4"},
-			apikey: {value:"none"},
-			consumptionurl: {value:""},
-			comboidentifier: {value:"",required: true},
-			metertype: {value:"",required: true}
-			
-        },
-        inputs:1,
-        outputs:4,
-        outputLabels: ["raw","processed","influxdb","influxdbconsumption"],
-        icon: "octopus.png",
-        align: "right",
-        label: function() {
-            return this.name||this.region||this.baseurl||this.tariff||this.minmax||this.apikey||this.consumptionurl||this.comboidentifier||this.metertype;
-        },
-        labelStyle: function() {
-            return this.name?"node_label_italic":"";
-        // },
-        // oneditprepare: function() {
-        //     if (this.datatype === undefined) {
-        //         $("#node-input-region").val("");
-        //     }
-        }
-    });
-</script>
