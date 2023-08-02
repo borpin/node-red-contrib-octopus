@@ -36,7 +36,7 @@ module.exports = function(RED) {
         var product_code = "AGILE-18-02-21";
         var tariff_code = "AGILE-FLEX-22-11-25";
         // var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
-        var baseurl = host_url + "/v1/products/" + product_code + "/electricity-tariffs/E-1R-" + tariff_code + this.region
+        var baseurl = host_url + "/v1/products/" + product_code + "/electricity-tariffs/E-1R-" + tariff_code + "-" + this.region
 
         var https = require("https");
         var next_run = new Date(0);
@@ -63,8 +63,6 @@ module.exports = function(RED) {
                 msg.region = this.region;
     
                 var APIurl = baseurl + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
-                node.status(APIurl);
-                node.send([APIurl,,]);
 
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
@@ -132,7 +130,10 @@ module.exports = function(RED) {
                             }
                             // set time for next request on success
                             node.send([msg, msg2, msg3]);
+                        } else {
+                            node.error(msg.rc)
                         }
+                        node.status(msg.rc);
                     });
                 }).on('error', function(e) {
                     node.error(e,msg);
