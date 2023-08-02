@@ -131,7 +131,7 @@ module.exports = function(RED) {
                             // set time for next request on success
                             node.send([msg, msg2, msg3]);
                         } else {
-                            node.error(msg.rc)
+                            node.error(APIurl);
                         }
                         node.status(msg.rc);
                     });
