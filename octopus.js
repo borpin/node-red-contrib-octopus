@@ -64,7 +64,7 @@ module.exports = function(RED) {
     
                 var APIurl = baseurl + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
                 node.status(APIurl);
-                node.debug(APIurl);
+                node.send([APIurl,,]);
 
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
