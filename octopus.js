@@ -32,7 +32,7 @@ module.exports = function(RED) {
     
         this.region = n.region;
 
-        var host_url = "https://api.octopus.energy/v1/products";
+        var host_url = "https://api.octopus.energy";
         var product_code = "AGILE-FLEX-22-11-25";
         var tariff_code = "E-1R-" + product_code + "-" + this.region;
         // var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
