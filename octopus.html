@@ -4,6 +4,14 @@
         <input type="text" id="node-input-name" placeholder="octopus">
     </div>
     <div class="form-row">
+        <label for="node-input-product"><i class="fa fa-tag"></i> Product</label>
+	<input type="text" id="node-input-product" placeholder="AGILE-18-02-21">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tariff"><i class="fa fa-tag"></i> Tariff</label>
+	<input type="text" id="node-input-tariff" placeholder="E-1R-AGILE-18-02-21-A">
+    </div>
+    <div class="form-row">
         <label for="node-input-region"><i class="fa fa-tag"></i> Energy Region</label>
         <select id="node-input-region" style="width:180px;">
             <option value="A">_A - East England</option>
@@ -110,6 +118,8 @@
         color:"rgb(91, 192, 222)",
         defaults: {
             name: {value:"Octopus"},
+            product: {value:"AGILE-18-02-21"},
+            tariff: {value:"E-1R-AGILE-18-02-21-A"},
             region: {value:"A"},
             numblocks: {value:"4"}
         },

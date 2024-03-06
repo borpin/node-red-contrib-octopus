@@ -26,9 +26,11 @@ module.exports = function(RED) {
           });
         }
     
-        this.region = n.region
+        this.region = n.region;
+        this.product = n.product || "AGILE-18-02-21";
+        this.tariff = n.tariff || "E-1R-" + n.product + "-" + this.region;
 
-        var baseurl = "https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-";
+        var baseurl = "https://api.octopus.energy/v1/products/";
         var https = require("https");
         var next_run = new Date(0);
 
@@ -53,7 +55,7 @@ module.exports = function(RED) {
                 msg.end_time = end_time.replace(/\.[0-9]{3}/, '');
                 msg.region = this.region;
     
-                var APIurl = baseurl + this.region + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
+                var APIurl = baseurl + this.product + '/electricity-tariffs/' + this.tariff + '/standard-unit-rates/?' + 'period_from=' + start_time + '&' + 'period_to=' + end_time;
     
                 https.get(APIurl, function(res) {
                     msg.rc = res.statusCode;
